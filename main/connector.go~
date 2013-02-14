@@ -63,7 +63,6 @@ func listen(tcp *TCPAddr) {
 		}
 		handleClient(conn)
 		//FIXME: Close it?
-		//TODO: Try to put fori n handle client, one connection permanent per node
 		conn.Close() // we’re finished
 
 	}

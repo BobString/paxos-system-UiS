@@ -27,7 +27,6 @@ func entryPoint(d int, p []int) (chan, chan) {
 		pSuspect[proc] = false
 
 	}
-	
 	//FIXME: Working??
 	go startTimer(actualTimeout)
 	return handlHBReplyChan, handlHBRequChan
