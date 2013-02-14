@@ -13,7 +13,7 @@ var (
 	delay         int = 0
 	actualTimeout int = 0
 )
-
+//FIXME: Convert this to a struct so we can instantate it with New()
 func init(d int, p []int) {
 	delay = d
 	actualTimeout = d
