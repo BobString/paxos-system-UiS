@@ -2,14 +2,12 @@ package failureDetector
 
 import (
 	"connector"
-
 	"net"
 	"strconv"
 	"time"
 )
 
 var (
-	//process   []int = make([]int, 20)
 	pAlive           = map[int]bool{}
 	pSuspect         = map[int]bool{}
 	pConnections     = map[int]*net.TCPConn{}
@@ -26,18 +24,16 @@ func EntryPoint(d int, p []int) (chan int, chan int) {
 	delay = d
 	actualTimeout = d
 	ownProcess, _ = connector.GetOwnProcess()
-
 	process = p
 
 	//Take the process and make 2 maps, alive and suspect
-	for proc := range p {
-
+	for aux := range p {
+		proc := process[aux]
 		pAlive[proc] = true
 		pSuspect[proc] = false
 
 	}
 
-	//FIXME: Working?? Maybe
 	go startTimer(actualTimeout)
 	return handlHBReplyChan, handlHBRequChan
 }
@@ -45,9 +41,9 @@ func EntryPoint(d int, p []int) (chan int, chan int) {
 func timeout(ticker *time.Ticker) bool {
 	//First part to manage the delay
 	var flag bool = false
-	for pr := range process {
-
-		if pSuspect[process[pr]] {
+	for aux := range process {
+		pr := process[aux]
+		if pSuspect[pr] {
 			//If there any project that is suspect, increase the timeout
 			actualTimeout = actualTimeout + delay
 			//We stop the last ticker
@@ -59,30 +55,27 @@ func timeout(ticker *time.Ticker) bool {
 
 	//Second part to manage the suspect process
 	for aux := range process {
+		if aux == ownProcess {
+			continue
+		}
 		pr := process[aux]
-		if !pAlive[pr] && !pSuspect[pr] {
+		if !pAlive[pr] {
 			pSuspect[pr] = true
-
-			//Trigger Suspect, pr
-			//TODO: Only to it owns leader detector Send through tcp a message to the own process
 			preSend("Suspect", pr)
 
 		} else if pAlive[pr] && pSuspect[pr] {
 			pSuspect[pr] = false
-
-			//Trigger Restore, pr
-			//TODO: Only to it owns leader detector
 			preSend("Restore", pr)
 		}
 
 		//Sent HeartbeatRequest to process
-
 		preSend("HeartbeatRequest", pr)
 	}
 
-	//Put pAlive all to true
-	for pr := range process {
-		pAlive[pr] = true
+	//Put pAlive all to false
+	for aux := range process {
+		pr := process[aux]
+		pAlive[pr] = false
 	}
 
 	//Start timer again only if the delay is changed
@@ -95,14 +88,13 @@ func timeout(ticker *time.Ticker) bool {
 
 func gotHeartBeatRequest(pr int) {
 	//Sent HeartbeatReply to pr
-	println("TEST: ", pr)
 	preSend("HeartbeatReply", pr)
 
 }
 
 func gotHeartBeatReply(pr int) {
 	pAlive[pr] = true
-	pSuspect[pr] = false
+	//pSuspect[pr] = false
 }
 
 func startTimer(sec int) {
@@ -114,7 +106,6 @@ func startTimer(sec int) {
 		case pr := <-handlHBReplyChan:
 			gotHeartBeatReply(pr)
 		case pr := <-handlHBRequChan:
-
 			gotHeartBeatRequest(pr)
 		case <-c.C:
 			flag = timeout(c)
@@ -125,30 +116,28 @@ func startTimer(sec int) {
 	}
 
 }
-func preSend(message string, pr int) {
 
+func preSend(message string, pr int) {
 	if message == "Suspect" || message == "Restore" {
 		//If is Suspect or Restore we are going to send the message to ourself to our leader election 
 		aux := message + "@" + strconv.Itoa(pr)
-		println("FAILURE DETECTOR: "+aux+" message, process: ", pr)
-
 		connector.Send(aux, ownProcess, nil)
+
 	} else if message == "HeartbeatReply" || message == "HeartbeatRequest" {
 
 		if pr == ownProcess {
 			return
 		}
-
 		_, err := connector.Send(message, pr, nil)
 		if err != nil {
 			pSuspect[pr] = true
 			preSend("Suspect", pr)
-
 		}
 	}
 
 }
 
+//Presend function to keep in cache the connections
 //func preSend(message string, pr int) {
 //	if message == "Suspect" || message == "Restore" {
 //		aux := message + "@" + strconv.Itoa(pr)

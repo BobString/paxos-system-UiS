@@ -10,17 +10,18 @@ import (
 
 var (
 	process = map[int]string{
-		1: "152.94.0.116:1200",
-		2: "152.94.0.115:1200",
-		3: "152.94.0.114:1200",
-		//4: "111.111.11.1:1200",
-		//5: "111.111.11.1:1200",
+		1: "152.94.0.120:1200", //pitter28
+		2: "152.94.0.121:1200", //pitter29
+		3: "152.94.0.122:1200", //pitter30
+		4: "152.94.0.114:1200", //pitter22
+		5: "152.94.0.115:1200", //pitter23
 	}
 	ownProcess int    = 0
 	ownIP      string = ""
 )
 
 func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
+
 	if connect == nil {
 		service := process[pr]
 		tcpAddr, err := net.ResolveTCPAddr("tcp", service)
@@ -35,11 +36,15 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 		}
 	}
 
-	//print("SEND: ", message)
-	//println(" to ", pr)
+	print("SEND: ", message)
+	println(" to ", pr)
 	if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" {
 		ownProcess, _ := GetOwnProcess()
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
+		if err != nil {
+			println("Error dialing the TCP addrs")
+			return nil, err
+		}
 		return connect, err
 	}
 	_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
