@@ -43,7 +43,7 @@ func timeout(ticker *time.Ticker) bool {
 	var flag bool = false
 	for aux := range process {
 		pr := process[aux]
-		if pSuspect[pr] {
+		if pSuspect[pr] && pAlive[pr] {
 			//If there any project that is suspect, increase the timeout
 			actualTimeout = actualTimeout + delay
 			//We stop the last ticker
@@ -52,18 +52,18 @@ func timeout(ticker *time.Ticker) bool {
 			break
 		}
 	}
-
+	
 	//Second part to manage the suspect process
 	for aux := range process {
-		if aux == ownProcess {
+		pr := process[aux]
+		if pr == ownProcess {
 			continue
 		}
-		pr := process[aux]
 		if !pAlive[pr] {
 			pSuspect[pr] = true
 			preSend("Suspect", pr)
 
-		} else if pAlive[pr] && pSuspect[pr] {
+		} else if pSuspect[pr] {
 			pSuspect[pr] = false
 			preSend("Restore", pr)
 		}
@@ -73,8 +73,7 @@ func timeout(ticker *time.Ticker) bool {
 	}
 
 	//Put pAlive all to false
-	for aux := range process {
-		pr := process[aux]
+	for pr,_ := range pAlive {
 		pAlive[pr] = false
 	}
 
@@ -114,7 +113,6 @@ func startTimer(sec int) {
 			break
 		}
 	}
-
 }
 
 func preSend(message string, pr int) {
