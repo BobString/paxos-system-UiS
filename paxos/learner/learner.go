@@ -16,10 +16,16 @@ type Pair struct {
 	val string
 }
 
-func receivingMsgs (incLearnerMsgs chan string)
+func EntryPoint () (chan string) {
+	go receivingMsgs()
+	return learnChan
+}
+
+func receivingMsgs ()  
 {	
 	procList := connector.GetProcesses()
 	nbProc := len(procList)
+	for {
 	mesg := <- learnChan
 	res = strings.Split(mesg,"@")
 	
@@ -36,5 +42,5 @@ func receivingMsgs (incLearnerMsgs chan string)
 	if v,_ := pairMap[p]; v>(nbProc/2) {
 		learnedValue = v 
 	}
-	
+	}
 }
