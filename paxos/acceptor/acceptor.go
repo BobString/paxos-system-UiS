@@ -3,7 +3,7 @@ package acceptor
 
 
 import (
-	"paxos/signals"
+	"connector"
 )
 
 // global variables : 
@@ -13,8 +13,8 @@ var (
 	rnd int // current round number
 	lvrn int // last voted round number
 	lvval int // last voted calue
-	sendPromiseChan = make(chan string,5) //intern channel
-	sendLearnChan = make(chan string,5)	// idem
+	sendPromiseChan = make(chan PromiseType,5) //intern channel
+	sendLearnChan = make(chan LearnType,5)	// idem
 )
 
 // functions :
@@ -33,17 +33,33 @@ func init (inPrepChan chan PrepareType, inAcceptChan chan AcceptType) {
 func prepareListener () {
 	for {
 		v,_ := <-inPrepChan
-		if v.>lvren {
-			
+		if v.RoundNum > lvren {
+			promise := "Promise@"+v.RoundNum+"@"+lvrn+"@"+lvval
+			preSend(prom,v.From)
 		}
 	}
 }
 
-func promiseSender () {
+func promiseSender (promise PromiseType, to int) {
+	
 }
 
 func acceptListener() {
+	for {
+		v,_ := <-inAcceptChan
+		
+	}
 }
 
 func learnSender() {
+}
+
+
+func preSend(message string, pr int) {
+	_, err := connector.Send(message, pr, nil)
+	if err != nil {
+		gotSuspectProc(pr)
+	} else {
+		gotProcRecov(pr)
+	}
 }

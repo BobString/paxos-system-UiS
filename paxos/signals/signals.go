@@ -1,5 +1,6 @@
 package signals
 
+/// FOR LOCAL USE ONLY ///
 type PrepareType struct {
 	RoundNum int
 	From int
