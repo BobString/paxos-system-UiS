@@ -4,3 +4,5 @@ import (
 
 )
 
+ func haha() {
+ }
