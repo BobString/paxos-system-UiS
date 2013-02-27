@@ -4,56 +4,59 @@ package acceptor
 
 import (
 	"connector"
+	"strings"
 )
 
 // global variables : 
 var (
-	propList []string // list of known proposers
-	learnList []string // list of known learners
+	learnList []int // list of known learners
 	rnd int // current round number
 	lvrn int // last voted round number
 	lvval int // last voted calue
-	sendPromiseChan = make(chan PromiseType,5) //intern channel
-	sendLearnChan = make(chan LearnType,5)	// idem
 )
 
 // functions :
-// 	init
+// 	EntryPoint
 // 	prepareListener
-//	promiseSender
 // 	acceptListener
-// 	learnSender
 
-func init (inPrepChan chan PrepareType, inAcceptChan chan AcceptType) {
+// Initialization function
+//@parameters :
+//	inPrepChan : when the server receives a Prepare message, it is sent to inPrepChan
+//	inAcceptChan : idem with Accept messages
+// 	sendRoundChan : to send to the Proposer the current system round number
+func EntryPoint (inPrepChan, inAcceptChan chan string, sendRoundChan chan int) {
 	go prepareListener(inPrepChan)
-	go acceptListener(inAcceptChan)
+	go acceptListener(inAcceptChan,sendRoundChan)
 }
 
 
-func prepareListener () {
+func prepareListener (inPrepChan chan string) {
 	for {
 		v,_ := <-inPrepChan
-		if v.RoundNum > lvren {
-			promise := "Promise@"+v.RoundNum+"@"+lvrn+"@"+lvval
-			preSend(prom,v.From)
+		strings.Split(v,"@")
+		if int(v[1]) > lvrn {
+			promise := "Promise@"+int(v[1])+"@"+lvrn+"@"+lvval+"@"
+			preSend(promise,v[2])
 		}
 	}
 }
 
-func promiseSender (promise PromiseType, to int) {
-	
-}
-
-func acceptListener() {
+func acceptListener(inAcceptChan chan string, sendRoundChan chan int) {
 	for {
-		v,_ := <-inAcceptChan
-		
+		v,_ := <-inAcceptChan		
+		strings.Split(v,"@")
+		if int(v[1])>= lvrn {
+			learn := "Learn@"+v[1]+"@"+v[2]+"@"
+			lvrn = int(v[1])
+			sendRoundChan <- lvrn
+			lvval = int(v[2])
+			for i := range learnList {
+				preSend(learn,learnList[i])
+			}
+		}
 	}
 }
-
-func learnSender() {
-}
-
 
 func preSend(message string, pr int) {
 	_, err := connector.Send(message, pr, nil)
