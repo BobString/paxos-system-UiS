@@ -1,13 +1,14 @@
 package learner
 
 import (
-  "acceptor"
 	"fmt"
 	"connector"
 )
 
 var(
-
+	learnChan = make(chan string,5)
+	learnedValue int
+	pairMap = make(map[Pair] int)
 )
 
 type Pair struct {
@@ -16,14 +17,24 @@ type Pair struct {
 }
 
 func receivingMsgs (incLearnerMsgs chan string)
-{
+{	
+	procList := connector.GetProcesses()
+	nbProc := len(procList)
+	mesg := <- learnChan
 	res = strings.Split(mesg,"@")
 	
-	x = res[1]
-	y = res[2]
 	p = Pair {res[1], res[2]}
-
-	PairMap [Pair] int
 	
-	_,ok = PairMap [Pair{x, y}]
+	_,ok := pairMap [p]
+	
+	if ok {
+		pairMap[p] = pairMap[p]+1
+	} else {
+		pairMap[p] = 1
+	}
+	
+	if v,_ := pairMap[p]; v>(nbProc/2) {
+		learnedValue = v 
+	}
+	
 }
