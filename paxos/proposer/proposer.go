@@ -1,8 +1,94 @@
 package proposer
 
 import (
-
+	"connector"
 )
 
- func haha() {
- }
+var (
+	mv                     = map[int]string{} //Round-vote map 
+	process                []int
+	acceptors              []int
+	leader                 int
+	currentRound           int = 0 //our ID at first
+	systemRound            int = 0
+	handlTrustChan         chan int
+	handlSysRoundChan          = make(chan int, 20)
+	handlPromiseLeaderChan     = make(chan string, 20)
+	maxRound               int = 0
+)
+
+func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan int) {
+	process = p
+	handlTrustChan = sysRoundChan
+	go loop()
+	return handlTrustChan, handlPromiseLeaderChan
+}
+
+func gotTrust(leader int) {
+
+	currentRound = pickNext(currentRound)
+	mv = map[int]string{}
+	for pr := range process {
+		proc := process[pr]
+		message := "Prepare@" + currentRound
+		preSend(message, proc)
+	}
+
+}
+func pickNext(currentRound int) {
+
+	for currentRound < systemRound {
+		currentRound = currentRound + len(process)
+	}
+	return currentRound
+}
+
+func gotPromise(data string) {
+	res = strings.Split(data, "@")
+	roundnumber := res[1]
+	lastVotedRound := res[2]
+	lastVotedValue := res[3]
+	processID := res[4]
+	if roundnumber == currentRound {
+		aux, _ := strconv.Atoi(lastVotedRound)
+		mv[aux] = lastVotedValue
+		if aux > maxRound {
+			maxRound = aux
+		}
+		if len(mv) >= len(process)/2 {
+			if aux == 0 {
+				//FIXME: ASK SOMEONE TO ENTER THE VALUE
+				proposedValue := "Remy"
+			} else {
+				//Pick the value form the largest round 
+				proposedValue := mv[max]
+			}
+			sendAll("Accept@" + currentRound + "@" + proposedValue)
+		}
+	}
+
+}
+func sendAll(message string) {
+	for pr := range process {
+		proc := process[pr]
+		preSend(message, proc)
+	}
+}
+func loop() {
+	for {
+		select {
+		case leader := <-handlTrustChan:
+			gotTrust(leader)
+		case data := <-handlPromiseLeaderChan:
+			gotPromise(data)
+		case sCR := <-handlSysRoundChan:
+			if sCR > systemRound {
+				systemRound = sCR
+			}
+		}
+	}
+}
+
+func preSend(message string, pr int) {
+	connector.Send(message, pr, nil)
+}

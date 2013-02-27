@@ -24,6 +24,7 @@ var (
 func EntryPoint(p []int) (chan int, chan int, chan int) {
 	process = p
 	ownProcess, _ = connector.GetOwnProcess()
+
 	//Take the process and make one map, suspect
 	for pr := range process {
 		proc := process[pr]
