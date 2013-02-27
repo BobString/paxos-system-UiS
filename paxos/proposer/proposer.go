@@ -17,9 +17,9 @@ var (
 	maxRound               int = 0
 )
 
-func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan int) {
+func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string) {
 	process = p
-	handlTrustChan = sysRoundChan
+	handlSysRoundChan = sysRoundChan
 	go loop()
 	return handlTrustChan, handlPromiseLeaderChan
 }

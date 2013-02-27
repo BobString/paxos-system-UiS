@@ -13,6 +13,8 @@ var (
 	rnd int // current round number
 	lvrn int // last voted round number
 	lvval int // last voted calue
+	inPrepChan = make(chan string,5)
+	inAcceptChan = make(chan string,5)
 )
 
 // functions :
@@ -25,9 +27,10 @@ var (
 //	inPrepChan : when the server receives a Prepare message, it is sent to inPrepChan
 //	inAcceptChan : idem with Accept messages
 // 	sendRoundChan : to send to the Proposer the current system round number
-func EntryPoint (inPrepChan, inAcceptChan chan string, sendRoundChan chan int) {
+func EntryPoint (sendRoundChan chan int) {
 	go prepareListener(inPrepChan)
 	go acceptListener(inAcceptChan,sendRoundChan)
+	return inPrepChan,inAcceptChan
 }
 
 
