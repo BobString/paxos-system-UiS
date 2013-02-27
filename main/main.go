@@ -102,7 +102,14 @@ func handleClient(conn net.Conn) {
 			handlHBRequChan <- i
 		case res[0] == "LeaderRequest":
 			handlTrustLeaderChan <- i
-
+		case res[0] == "Promise":
+			//handlTrustLeaderChan <- i
+		case res[0] == "Prepare":
+			//handlTrustLeaderChan <- i
+		case res[0] == "Accept":
+			//handlTrustLeaderChan <- i
+		case res[0] == "Learn":
+			//handlTrustLeaderChan <- i
 		}
 	}
 
