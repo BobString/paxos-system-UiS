@@ -81,7 +81,7 @@ func gotPromise(data string) {
 				//Pick the value form the largest round 
 				proposedValue = mv[maxRound]
 			}
-			curR,_ := strconv.Itoa(currentRound)
+			curR := strconv.Itoa(currentRound)
 			sendAll("Accept@" + curR + "@" + proposedValue)
 		}
 	}
