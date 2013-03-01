@@ -2,13 +2,14 @@ package learner
 
 import (
 	"fmt"
-	"connector"
+	"strings"
 )
 
 var(
 	learnChan = make(chan string,5)
 	learnedValue int
 	pairMap = make(map[Pair] int)
+	nbProc int
 )
 
 type Pair struct {
@@ -16,15 +17,13 @@ type Pair struct {
 	val string
 }
 
-func EntryPoint () (chan string) {
+func EntryPoint (count int) (chan string) {
+	nbProc = count
 	go receivingMsgs()
 	return learnChan
 }
 
-func receivingMsgs ()  
-{	
-	procList := connector.GetProcesses()
-	nbProc := len(procList)
+func receivingMsgs () {	
 	for {
 	mesg := <- learnChan
 	res = strings.Split(mesg,"@")
