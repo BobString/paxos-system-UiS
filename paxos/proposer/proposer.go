@@ -73,12 +73,13 @@ func gotPromise(data string) {
 			maxRound = aux
 		}
 		if len(mv) >= len(process)/2 {
+			var proposedValue string
 			if aux == 0 {
 				//FIXME: ASK SOMEONE TO ENTER THE VALUE
-				proposedValue := valueToDecide
+				proposedValue = valueToDecide
 			} else {
 				//Pick the value form the largest round 
-				proposedValue := mv[maxRound]
+				proposedValue = mv[maxRound]
 			}
 			curR,_ := strconv.Itoa(currentRound)
 			sendAll("Accept@" + curR + "@" + proposedValue)
