@@ -3,6 +3,7 @@ package learner
 import (
 	//"fmt"
 	"strings"
+	"strconv"
 )
 
 var(
@@ -28,7 +29,7 @@ func receivingMsgs () {
 	mesg := <- learnChan
 	res := strings.Split(mesg,"@")
 	
-	p := Pair {int(res[1]), int(res[2])}
+	p := Pair {strconv.Atoi(res[1]), res[2]}
 	
 	_,ok := pairMap [p]
 	

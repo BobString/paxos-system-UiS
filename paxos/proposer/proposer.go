@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"strconv"
+	"leaderElection"
 )
 
 var (
@@ -61,12 +62,12 @@ func pickNext(currentRound int) int {
 
 func gotPromise(data string) {
 	res := strings.Split(data, "@")
-	roundnumber := int(res[1])
-	lastVotedRound := int(res[2])
+	roundnumber := strconv.Atoi(res[1])
+	lastVotedRound := strconv.Atoi(res[2])
 	lastVotedValue := res[3]
 	processID := res[4]
 	if roundnumber == currentRound {
-		aux, _ := strconv.Atoi(lastVotedRound)
+		aux:= lastVotedRound
 		mv[aux] = lastVotedValue
 		if aux > maxRound {
 			maxRound = aux
@@ -79,7 +80,7 @@ func gotPromise(data string) {
 				//Pick the value form the largest round 
 				proposedValue := mv[maxRound]
 			}
-			sendAll("Accept@" + string(currentRound) + "@" + proposedValue)
+			sendAll("Accept@" + strconv.Itoa(currentRound) + "@" + proposedValue)
 		}
 	}
 
