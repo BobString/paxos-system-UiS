@@ -28,8 +28,8 @@ func receivingMsgs () {
 	for {
 	mesg := <- learnChan
 	res := strings.Split(mesg,"@")
-	
-	p := Pair {strconv.Atoi(res[1]), res[2]}
+	a,_ := strconv.Atoi(res[1])
+	p := Pair {a, res[2]}
 	
 	_,ok := pairMap [p]
 	

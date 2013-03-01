@@ -62,8 +62,8 @@ func pickNext(currentRound int) int {
 
 func gotPromise(data string) {
 	res := strings.Split(data, "@")
-	roundnumber := strconv.Atoi(res[1])
-	lastVotedRound := strconv.Atoi(res[2])
+	roundnumber,_ := strconv.Atoi(res[1])
+	lastVotedRound,_ := strconv.Atoi(res[2])
 	lastVotedValue := res[3]
 	processID := res[4]
 	if roundnumber == currentRound {
@@ -80,7 +80,8 @@ func gotPromise(data string) {
 				//Pick the value form the largest round 
 				proposedValue := mv[maxRound]
 			}
-			sendAll("Accept@" + strconv.Itoa(currentRound) + "@" + proposedValue)
+			curR,_ := strconv.Itoa(currentRound)
+			sendAll("Accept@" + curR + "@" + proposedValue)
 		}
 	}
 
