@@ -14,15 +14,25 @@ var (
 	handlTrustChan         chan int
 	handlSysRoundChan          = make(chan int, 20)
 	handlPromiseLeaderChan     = make(chan string, 20)
+	valueChan				= make(chan string, 5)
 	maxRound               int = 0
+	valueToDecide			string
 )
 
-func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string) {
+func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string, chan string) {
 	process = p
 	handlSysRoundChan = sysRoundChan
+	go listenToValue()
 	go loop()
-	return handlTrustChan, handlPromiseLeaderChan
+	return handlTrustChan, handlPromiseLeaderChan, valueChan
 }
+
+func listenToValue () {
+	for {
+		valueToDecide = <- valueChan
+	}
+}
+
 
 func gotTrust(leader int) {
 
@@ -58,10 +68,10 @@ func gotPromise(data string) {
 		if len(mv) >= len(process)/2 {
 			if aux == 0 {
 				//FIXME: ASK SOMEONE TO ENTER THE VALUE
-				proposedValue := "Remy"
+				proposedValue = valueToDecide
 			} else {
 				//Pick the value form the largest round 
-				proposedValue := mv[max]
+				proposedValue = mv[max]
 			}
 			sendAll("Accept@" + currentRound + "@" + proposedValue)
 		}
@@ -74,8 +84,14 @@ func sendAll(message string) {
 		preSend(message, proc)
 	}
 }
+func isLeader () bool {
+	me,_ := connector.GetOwnProcess()
+	leader := leaderElection.GetLeader()
+	return me == leader
+}
 func loop() {
 	for {
+		if isLeader() {
 		select {
 		case leader := <-handlTrustChan:
 			gotTrust(leader)
@@ -85,6 +101,7 @@ func loop() {
 			if sCR > systemRound {
 				systemRound = sCR
 			}
+		}
 		}
 	}
 }

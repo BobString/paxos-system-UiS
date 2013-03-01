@@ -17,7 +17,7 @@ var (
  
 // Initialization function
 //@parameters :
-func EntryPoint () (chan int, chan string, chan string, chan string, chan string) {
+func EntryPoint () (chan int, chan string, chan string, chan string, chan string, chan string) {
 	// TODO : get the []int of processes
 	pMap := connector.GetProcesses()
 	var  p = make([]int,len(pMap))
@@ -27,9 +27,9 @@ func EntryPoint () (chan int, chan string, chan string, chan string, chan string
 		i++
 	}
 	//
-	trustChan,promChan := paxos/proposer.EntryPoint(p,acceptToPropChan)
+	trustChan,promChan,valueChan := paxos/proposer.EntryPoint(p,acceptToPropChan)
 	prepChan,acceptChan := paxos/acceptor.EntryPoint(p,acceptToPropChan)
 	learnChan := paxos/learner.EntryPoint(len(p))	
-	return trustChan,prepChan,promChan,acceptChan,learnChan
+	return trustChan,prepChan,promChan,acceptChan,learnChan,valueChan
 }
 
