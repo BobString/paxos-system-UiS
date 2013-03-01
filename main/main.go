@@ -26,9 +26,10 @@ var (
 	handlLeaderReqChan         = make(chan int, 20)
 	handlTrustChan             = make(chan int, 20)
 	handlPromiseLeaderChan     = make(chan string, 20)
-	inPrepChan                 = make(chan string, 20)
+	inPrepChan                 = make(chan srting, 20)
 	inAcceptChan               = make(chan string, 20)
 	learnChan                  = make(chan string, 20)
+	valueChan                  = make(chan string, 20)
 	ownProcess             int = 0
 )
 
@@ -52,7 +53,7 @@ func main() {
 	//Launch Failure Detector
 	handlHBReplyChan, handlHBRequChan = failureDetector.EntryPoint(delay, keys)
 	//Call paxos and assign the channels
-
+	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxos / paxosMain.EntryPoint()
 	<-endChan
 
 }
@@ -81,7 +82,7 @@ func createServer() {
 func handleClient(conn net.Conn) {
 	for {
 		leader := leaderElection.GetLeader()
-		println("MAIN LEADER: ", leader)
+		printf("MAIN LEADER: ", leader)
 		buf := make([]byte, 512)
 		_, err := conn.Read(buf)
 		if err != nil {
@@ -120,7 +121,11 @@ func handleClient(conn net.Conn) {
 		case res[0] == "Learn":
 			learnChan <- string1
 		case res[0] == "Trust":
-			handlTrustChan <- i
+			handlTrustChan <- string1
+		case res[0] == "Trust":
+			handlTrustChan <- string1
+		case res[0] == "Value":
+			valueChan <- string1
 		}
 	}
 
