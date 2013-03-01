@@ -37,7 +37,7 @@ func EntryPoint(p []int) (chan int, chan int, chan int) {
 
 }
 
-func GetLeader () {
+func GetLeader () int {
 	return leader
 }
 
