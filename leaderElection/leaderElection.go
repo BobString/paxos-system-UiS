@@ -37,6 +37,10 @@ func EntryPoint(p []int) (chan int, chan int, chan int) {
 
 }
 
+func GetLeader () {
+	return leader
+}
+
 func auxiliar() {
 	//newLeaderRequest()
 	c := time.NewTicker(time.Duration(timeLeaderRequest) * time.Second)
