@@ -80,6 +80,8 @@ func createServer() {
 
 func handleClient(conn net.Conn) {
 	for {
+		leader := leaderElection.GetLeader()
+		printf("MAIN LEADER: ", leader)
 		buf := make([]byte, 512)
 		_, err := conn.Read(buf)
 		if err != nil {
