@@ -1,7 +1,7 @@
 package learner
 
 import (
-	"fmt"
+	//"fmt"
 	"strings"
 )
 
@@ -26,9 +26,9 @@ func EntryPoint (count int) (chan string) {
 func receivingMsgs () {	
 	for {
 	mesg := <- learnChan
-	res = strings.Split(mesg,"@")
+	res := strings.Split(mesg,"@")
 	
-	p = Pair {res[1], res[2]}
+	p := Pair {res[1], res[2]}
 	
 	_,ok := pairMap [p]
 	

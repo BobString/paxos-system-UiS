@@ -3,6 +3,7 @@ package proposer
 import (
 	"connector"
 	"fmt"
+	"strings"
 )
 
 var (
@@ -30,7 +31,7 @@ func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string, chan str
 
 func listenToValue () {
 	for {
-		preValue = <- valueChan
+		preValue := <- valueChan
 		str := strings.Split(preValue,"@")
 		valueToDecide = str[1]
 		fmt.Println("Value to decide received :",valueToDecide)
@@ -44,12 +45,12 @@ func gotTrust(leader int) {
 	mv = map[int]string{}
 	for pr := range process {
 		proc := process[pr]
-		message := "Prepare@" + currentRound
+		message := "Prepare@" + string(currentRound)
 		preSend(message, proc)
 	}
 
 }
-func pickNext(currentRound int) {
+func pickNext(currentRound int) int {
 
 	for currentRound < systemRound {
 		currentRound = currentRound + len(process)
@@ -58,7 +59,7 @@ func pickNext(currentRound int) {
 }
 
 func gotPromise(data string) {
-	res = strings.Split(data, "@")
+	res := strings.Split(data, "@")
 	roundnumber := res[1]
 	lastVotedRound := res[2]
 	lastVotedValue := res[3]

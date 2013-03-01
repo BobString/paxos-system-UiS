@@ -27,7 +27,7 @@ var (
 //	inPrepChan : when the server receives a Prepare message, it is sent to inPrepChan
 //	inAcceptChan : idem with Accept messages
 // 	sendRoundChan : to send to the Proposer the current system round number
-func EntryPoint (list []int, sendRoundChan chan int) {
+func EntryPoint (list []int, sendRoundChan chan int) (chan string,chan string) {
 	learnList = list
 	go prepareListener(inPrepChan)
 	go acceptListener(inAcceptChan,sendRoundChan)
@@ -40,8 +40,8 @@ func prepareListener (inPrepChan chan string) {
 		v,_ := <-inPrepChan
 		strings.Split(v,"@")
 		if int(v[1]) > lvrn {
-			promise := "Promise@"+int(v[1])+"@"+lvrn+"@"+lvval+"@"
-			preSend(promise,v[2])
+			promise := "Promise@"+string(v[1])+"@"+lvrn+"@"+lvval+"@"
+			preSend(promise,int(v[2]))
 		}
 	}
 }
@@ -51,7 +51,7 @@ func acceptListener(inAcceptChan chan string, sendRoundChan chan int) {
 		v,_ := <-inAcceptChan		
 		strings.Split(v,"@")
 		if int(v[1])>= lvrn {
-			learn := "Learn@"+v[1]+"@"+v[2]+"@"
+			learn := "Learn@"+string(v[1])+"@"+string(v[2])+"@"
 			lvrn = int(v[1])
 			sendRoundChan <- lvrn
 			lvval = int(v[2])
@@ -63,10 +63,5 @@ func acceptListener(inAcceptChan chan string, sendRoundChan chan int) {
 }
 
 func preSend(message string, pr int) {
-	_, err := connector.Send(message, pr, nil)
-	if err != nil {
-		gotSuspectProc(pr)
-	} else {
-		gotProcRecov(pr)
-	}
+	connector.Send(message, pr, nil)
 }
