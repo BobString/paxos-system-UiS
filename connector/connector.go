@@ -38,7 +38,7 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 
 	print("SEND: ", message)
 	println(" to ", pr)
-	if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" {
+	if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || message == "Value" {
 		ownProcess, _ := GetOwnProcess()
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {

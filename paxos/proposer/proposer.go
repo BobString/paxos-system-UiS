@@ -2,6 +2,7 @@ package proposer
 
 import (
 	"connector"
+	"fmt"
 )
 
 var (
@@ -29,7 +30,10 @@ func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string, chan str
 
 func listenToValue () {
 	for {
-		valueToDecide = <- valueChan
+		preValue = <- valueChan
+		str := strings.Split(preValue,"@")
+		valueToDecide = str[1]
+		fmt.Println("Value to decide received :",valueToDecide)
 	}
 }
 

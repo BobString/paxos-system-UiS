@@ -18,7 +18,6 @@ var (
 // Initialization function
 //@parameters :
 func EntryPoint () (chan int, chan string, chan string, chan string, chan string, chan string) {
-	// TODO : get the []int of processes
 	pMap := connector.GetProcesses()
 	var  p = make([]int,len(pMap))
 	i := 0
