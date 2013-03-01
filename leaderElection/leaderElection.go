@@ -9,10 +9,12 @@ import (
 var (
 	pSuspect                 = map[int]bool{}
 	leader               int = 0
+	countLeader          int = 0
 	handlSuspectChan         = make(chan int, 20)
 	handlRecoveryChan        = make(chan int, 20)
 	handlTrustLeaderChan     = make(chan int, 20)
 	handlLeaderReqChan       = make(chan int, 20)
+	handlTrustChan       chan int
 	process              []int
 	ownProcess           int
 	pConnections         = map[int]*net.TCPConn{}
@@ -21,10 +23,10 @@ var (
 	timeLeaderRequest    int = 2
 )
 
-func EntryPoint(p []int) (chan int, chan int, chan int) {
+func EntryPoint(p []int, trust chan int) (chan int, chan int, chan int) {
 	process = p
 	ownProcess, _ = connector.GetOwnProcess()
-
+	handlTrustChan = trust
 	//Take the process and make one map, suspect
 	for pr := range process {
 		proc := process[pr]
@@ -37,7 +39,7 @@ func EntryPoint(p []int) (chan int, chan int, chan int) {
 
 }
 
-func GetLeader () int {
+func GetLeader() int {
 	return leader
 }
 
@@ -55,7 +57,15 @@ func auxiliar() {
 			trustLeader(pr)
 		case <-c.C:
 			if leader == ownProcess {
+				countLeader = countLeader + 1
 				newLeaderRequest()
+				if countLeader == 2 {
+					//We are a stable leader
+					handlTrustChan <- ownProcess
+					countLeader = countLeader + 1
+				}
+			} else {
+				countLeader = 0
 			}
 		}
 		println("Leader: ", leader)

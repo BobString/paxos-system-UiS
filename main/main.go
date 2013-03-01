@@ -7,9 +7,9 @@ import (
 	"leaderElection"
 	"net"
 	"os"
+	"paxos"
 	"strconv"
 	"strings"
-	"paxos"
 )
 
 const (
@@ -48,13 +48,13 @@ func main() {
 		keys[i] = k
 		i++
 	}
-
+	//Call paxos and assign the channels
+	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint()
 	//Launch Leader Election	
-	handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan = leaderElection.EntryPoint(keys)
+	handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan = leaderElection.EntryPoint(keys, handlTrustChan)
 	//Launch Failure Detector
 	handlHBReplyChan, handlHBRequChan = failureDetector.EntryPoint(delay, keys)
-	//Call paxos and assign the channels
-	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxos / paxosMain.EntryPoint()
+
 	<-endChan
 
 }
@@ -97,21 +97,28 @@ func handleClient(conn net.Conn) {
 		string1 := string(buf)
 		res = strings.Split(string1, "@")
 		stringaux := res[1]
-
-		i, err := strconv.Atoi(stringaux)
-		checkError(err)
-		print("RECEIVED: ", res[0])
-		println(" from ", i)
+		println("RECEIVED: ", res[0])
+		//println(" from ", i)
 		switch {
 		case res[0] == "Suspect":
+			i, err := strconv.Atoi(stringaux)
+			checkError(err)
 			handlSuspectChan <- i
 		case res[0] == "Restore":
+			i, err := strconv.Atoi(stringaux)
+			checkError(err)
 			handlRecoveryChan <- i
 		case res[0] == "HeartbeatReply":
+			i, err := strconv.Atoi(stringaux)
+			checkError(err)
 			handlHBReplyChan <- i
 		case res[0] == "HeartbeatRequest":
+			i, err := strconv.Atoi(stringaux)
+			checkError(err)
 			handlHBRequChan <- i
 		case res[0] == "LeaderRequest":
+			i, err := strconv.Atoi(stringaux)
+			checkError(err)
 			handlTrustLeaderChan <- i
 		case res[0] == "Promise":
 			handlPromiseLeaderChan <- string1
@@ -121,9 +128,8 @@ func handleClient(conn net.Conn) {
 			inAcceptChan <- string1
 		case res[0] == "Learn":
 			learnChan <- string1
-		case res[0] == "Trust":
-			handlTrustChan <- i
 		case res[0] == "Value":
+			//FIXME: If we are the leader we put in the channel, if not we send to the leader
 			valueChan <- string1
 		}
 	}
