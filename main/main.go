@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"paxos"
 )
 
 const (
