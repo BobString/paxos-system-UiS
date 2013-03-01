@@ -4,6 +4,7 @@ import (
 	"connector"
 	"fmt"
 	"strings"
+	"strconv"
 )
 
 var (
@@ -60,8 +61,8 @@ func pickNext(currentRound int) int {
 
 func gotPromise(data string) {
 	res := strings.Split(data, "@")
-	roundnumber := res[1]
-	lastVotedRound := res[2]
+	roundnumber := int(res[1])
+	lastVotedRound := int(res[2])
 	lastVotedValue := res[3]
 	processID := res[4]
 	if roundnumber == currentRound {
@@ -73,12 +74,12 @@ func gotPromise(data string) {
 		if len(mv) >= len(process)/2 {
 			if aux == 0 {
 				//FIXME: ASK SOMEONE TO ENTER THE VALUE
-				proposedValue = valueToDecide
+				proposedValue := valueToDecide
 			} else {
 				//Pick the value form the largest round 
-				proposedValue = mv[max]
+				proposedValue := mv[maxRound]
 			}
-			sendAll("Accept@" + currentRound + "@" + proposedValue)
+			sendAll("Accept@" + string(currentRound) + "@" + proposedValue)
 		}
 	}
 

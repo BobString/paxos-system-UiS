@@ -28,7 +28,7 @@ func receivingMsgs () {
 	mesg := <- learnChan
 	res := strings.Split(mesg,"@")
 	
-	p := Pair {res[1], res[2]}
+	p := Pair {int(res[1]), int(res[2])}
 	
 	_,ok := pairMap [p]
 	

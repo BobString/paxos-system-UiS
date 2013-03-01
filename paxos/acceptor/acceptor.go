@@ -40,7 +40,7 @@ func prepareListener (inPrepChan chan string) {
 		v,_ := <-inPrepChan
 		strings.Split(v,"@")
 		if int(v[1]) > lvrn {
-			promise := "Promise@"+string(v[1])+"@"+lvrn+"@"+lvval+"@"
+			promise := "Promise@"+string(v[1])+"@"+string(lvrn)+"@"+string(lvval)+"@"
 			preSend(promise,int(v[2]))
 		}
 	}
