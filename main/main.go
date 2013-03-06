@@ -129,8 +129,12 @@ func handleClient(conn net.Conn) {
 		case res[0] == "Learn":
 			learnChan <- string1
 		case res[0] == "Value":
-			//FIXME: If we are the leader we put in the channel, if not we send to the leader
-			valueChan <- string1
+			lead = leaderElection.GetLeader()
+			if lead==ownProcess {
+				valueChan <- string1
+			} else {
+				connector.Send(string1,lead,nil)
+			}			
 		}
 	}
 

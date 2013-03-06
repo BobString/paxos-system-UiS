@@ -99,7 +99,7 @@ func isLeader() bool {
 }
 func loop() {
 	for {
-		//FIXME: All processes are going inside because at the first time all are leaders
+		//FIXME: All processes are going inside because at the first time all are leaders ////////DONE
 		if isLeader() {
 			select {
 			case leader := <-handlTrustChan:
@@ -110,6 +110,7 @@ func loop() {
 				if sCR > systemRound {
 					systemRound = sCR
 				}
+			default: //TODO : check if works correctly
 			}
 		}
 	}

@@ -14,15 +14,15 @@ var (
 	rnd          int    // current round number
 	lvrn         int    // last voted round number
 	lvval        string // last voted value
-	inPrepChan   = make(chan string, 5)
-	inAcceptChan = make(chan string, 5)
+	inPrepChan   = make(chan string, 5) // chan for reception of prepare 
+	inAcceptChan = make(chan string, 5) // chan for reception of accept 
 )
 
 // functions :
-// functions :
-// 	EntryPoint
-// 	prepareListener
-// 	acceptListener
+// 	EntryPoint : init function
+// 	prepareListener : prepare messages handler
+// 	acceptListener : accept messages handler
+//  preSend : to send messages easily
 
 // Initialization function
 //@parameters :
@@ -38,12 +38,12 @@ func EntryPoint(list []int, sendRoundChan chan int) (chan string, chan string) {
 
 func prepareListener(inPrepChan chan string) {
 	for {
-
+		// wait for inPrepChan
 		v := <-inPrepChan
 		println("=================== ACCEPTOR: PREPARE RECEIVED =======================", v)
 		s := strings.Split(v, "@")
-		v1, _ := strconv.Atoi(s[1])
-		v2, _ := strconv.Atoi(s[2])
+		v1, _ := strconv.Atoi(s[1]) // get the int value for the if
+		v2, _ := strconv.Atoi(s[2]) // get the int value for the preSend func
 		if v1 > lvrn {
 			promise := "Promise@" + strconv.Itoa(v1) + "@" + strconv.Itoa(lvrn) + "@" + lvval + "@"
 			println("=================== ACCEPTOR: SENDING PROMISE =======================", promise)
@@ -54,9 +54,10 @@ func prepareListener(inPrepChan chan string) {
 
 func acceptListener(inAcceptChan chan string, sendRoundChan chan int) {
 	for {
+		// wait for inAcceptChan
 		v := <-inAcceptChan
 		s := strings.Split(v, "@")
-		s1, _ := strconv.Atoi(s[1])
+		s1, _ := strconv.Atoi(s[1]) // get the int value for the if
 		if s1 >= lvrn {
 			learn := "Learn@" + s[1] + "@" + s[2] + "@"
 			lvrn = s1

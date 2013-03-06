@@ -1,14 +1,17 @@
 package learner
 
+// @authors Remy, Aliaksandr
+
 import (
 	//"fmt"
 	"strings"
 	"strconv"
 )
 
+// global variables
 var(
-	learnChan = make(chan string,5)
-	learnedValue int
+	learnChan = make(chan string,5) // the channel of reception
+	learnedValue string //
 	pairMap = make(map[Pair] int)
 	nbProc int
 )
