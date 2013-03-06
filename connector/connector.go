@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -13,8 +14,8 @@ var (
 		1: "152.94.0.120:1200", //pitter28
 		2: "152.94.0.121:1200", //pitter29
 		3: "152.94.0.118:1200", //pitter26
-		4: "152.94.0.114:1200", //pitter22
-		5: "152.94.0.115:1200", //pitter23
+		//4: "152.94.0.114:1200", //pitter22
+		//5: "152.94.0.115:1200", //pitter23
 	}
 	ownProcess int    = 0
 	ownIP      string = ""
@@ -36,7 +37,7 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 		}
 	}
 
-	print("SEND: ", message)
+	print("["+time.Now().String()+"]","SEND: ", message)
 	println(" to ", pr)
 	if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || message == "Value" {
 		ownProcess, _ := GetOwnProcess()

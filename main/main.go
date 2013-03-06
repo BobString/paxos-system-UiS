@@ -9,6 +9,7 @@ import (
 	"os"
 	"paxos"
 	"strconv"
+	"time"
 	"strings"
 )
 
@@ -82,7 +83,7 @@ func createServer() {
 
 func handleClient(conn net.Conn) {
 	for {
-		leader := leaderElection.GetLeader()
+		//leader := leaderElection.GetLeader()
 		//println("MAIN LEADER: ", leader)
 		buf := make([]byte, 512)
 		_, err := conn.Read(buf)
