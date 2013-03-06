@@ -97,7 +97,7 @@ func handleClient(conn net.Conn) {
 		string1 := string(buf)
 		res = strings.Split(string1, "@")
 		stringaux := res[1]
-		println("["+time.Now()+"]","RECEIVED: ", res[0])
+		println("["+time.Now().String()+"]","RECEIVED: ", res[0])
 		//println(" from ", i)
 		switch {
 		case res[0] == "Suspect":

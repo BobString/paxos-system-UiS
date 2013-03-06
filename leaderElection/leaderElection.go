@@ -62,7 +62,7 @@ func auxiliar() {
 				if countLeader == 2 {
 					//We are a stable leader
 					handlTrustChan <- ownProcess
-					println("["+time.Now()+"]","We are the leader !!")
+					println("["+time.Now().String()+"]","We are the leader !!")
 					countLeader = countLeader + 1
 				}
 			} else {
