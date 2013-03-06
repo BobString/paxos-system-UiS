@@ -40,13 +40,11 @@ func prepareListener(inPrepChan chan string) {
 	for {
 		// wait for inPrepChan
 		v := <-inPrepChan
-		println("=================== ACCEPTOR: PREPARE RECEIVED =======================", v)
 		s := strings.Split(v, "@")
 		v1, _ := strconv.Atoi(s[1]) // get the int value for the if
 		v2, _ := strconv.Atoi(s[2]) // get the int value for the preSend func
 		if v1 > lvrn {
 			promise := "Promise@" + strconv.Itoa(v1) + "@" + strconv.Itoa(lvrn) + "@" + lvval + "@"
-			println("=================== ACCEPTOR: SENDING PROMISE =======================", promise)
 			preSend(promise, v2)
 		}
 	}

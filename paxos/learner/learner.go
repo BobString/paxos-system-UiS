@@ -45,6 +45,7 @@ func receivingMsgs () {
 		// we then checl if the a quorum of acceptors has sent the same Learn message
 		if v,_ := pairMap[p]; v>(nbProc/2) {
 			learnedValue = p
+			println("["+time.Now()+"]","NEW VALUE LEARNED :",p)
 		}
 	}
 }

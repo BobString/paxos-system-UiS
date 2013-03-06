@@ -83,7 +83,7 @@ func createServer() {
 func handleClient(conn net.Conn) {
 	for {
 		leader := leaderElection.GetLeader()
-		println("MAIN LEADER: ", leader)
+		//println("MAIN LEADER: ", leader)
 		buf := make([]byte, 512)
 		_, err := conn.Read(buf)
 		if err != nil {
@@ -97,7 +97,7 @@ func handleClient(conn net.Conn) {
 		string1 := string(buf)
 		res = strings.Split(string1, "@")
 		stringaux := res[1]
-		println("RECEIVED: ", res[0])
+		println("["+time.Now()+"]","RECEIVED: ", res[0])
 		//println(" from ", i)
 		switch {
 		case res[0] == "Suspect":
