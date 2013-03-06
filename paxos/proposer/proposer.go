@@ -8,21 +8,22 @@ import (
 	"strings"
 )
 
+// global variables
 var (
 	mv                     = map[int]string{} //Round-vote map 
-	process                []int
-	acceptors              []int
-	leader                 int
+	process                []int // list of processes
+	acceptors              []int // list of acceptors : USEFUL ??? //////
+	leader                 int // currentLeader
 	currentRound           int = 0 //our ID at first
-	systemRound            int = 0
-	handlTrustChan             = make(chan int, 20)
-	handlSysRoundChan          = make(chan int, 20)
-	handlPromiseLeaderChan     = make(chan string, 20)
-	valueChan                  = make(chan string, 5)
-	maxRound               int = 0
-	valueToDecide          string
+	systemRound            int = 0 // current system round number
+	handlTrustChan             = make(chan int, 20) // trust receive chan
+	handlSysRoundChan          = make(chan int, 20) // system round number receive chan
+	handlPromiseLeaderChan     = make(chan string, 20) // promise receive chan
+	valueChan                  = make(chan string, 5) // value to decide chan
+	maxRound               int = 0 // /////////////////////////////////////////// ??
+	valueToDecide          string // the value we want to decide
 )
-
+// Init function
 func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string, chan string) {
 	process = p
 	handlSysRoundChan = sysRoundChan
@@ -31,7 +32,7 @@ func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string, chan str
 	go loop()
 	return handlTrustChan, handlPromiseLeaderChan, valueChan
 }
-
+// the value listener
 func listenToValue() {
 	for {
 		preValue := <-valueChan
@@ -40,7 +41,7 @@ func listenToValue() {
 		fmt.Println("Value to decide received :", valueToDecide)
 	}
 }
-
+// what we do when we become the leader : change the round number
 func gotTrust(leader int) {
 	currentRound = pickNext(currentRound)
 	mv = map[int]string{}
@@ -51,6 +52,7 @@ func gotTrust(leader int) {
 	}
 
 }
+// the round number increase function
 func pickNext(currentRound int) int {
 
 	for currentRound < systemRound {
@@ -58,7 +60,7 @@ func pickNext(currentRound int) int {
 	}
 	return currentRound
 }
-
+// function handling the promise message
 func gotPromise(data string) {
 	res := strings.Split(data, "@")
 	roundnumber, _ := strconv.Atoi(res[1])
