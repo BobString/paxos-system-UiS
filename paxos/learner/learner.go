@@ -18,8 +18,8 @@ var(
 )
 
 type Pair struct {
-	nv int
-	val string
+	Nv int
+	Val string
 }
 // Init function
 func EntryPoint (count int) (chan string) {
@@ -46,7 +46,7 @@ func receivingMsgs () {
 		// we then checl if the a quorum of acceptors has sent the same Learn message
 		if v,_ := pairMap[p]; v>(nbProc/2) {
 			learnedValue = p
-			println("["+time.Now().String()+"]","NEW VALUE LEARNED :",p)
+			println("["+time.Now().String()+"]","NEW VALUE LEARNED :",p.Val)
 		}
 	}
 }
