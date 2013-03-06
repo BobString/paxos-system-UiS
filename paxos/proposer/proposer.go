@@ -6,7 +6,7 @@ import (
 	"leaderElection"
 	"strconv"
 	"strings"
-	"time"
+	//"time"
 )
 
 // global variables
