@@ -6,6 +6,7 @@ import (
 	"leaderElection"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // global variables
@@ -28,18 +29,8 @@ func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string, chan str
 	process = p
 	handlSysRoundChan = sysRoundChan
 	currentRound, _ = connector.GetOwnProcess()
-	go listenToValue()
 	go loop()
 	return handlTrustChan, handlPromiseLeaderChan, valueChan
-}
-// the value listener
-func listenToValue() {
-	for {
-		preValue := <-valueChan
-		str := strings.Split(preValue, "@")
-		valueToDecide = str[1]
-		fmt.Println("Value to decide received :", valueToDecide)
-	}
 }
 // what we do when we become the leader : change the round number
 func gotTrust(leader int) {
@@ -50,7 +41,6 @@ func gotTrust(leader int) {
 		message := "Prepare@" + strconv.Itoa(currentRound)
 		preSend(message, proc)
 	}
-
 }
 // the round number increase function
 func pickNext(currentRound int) int {
@@ -76,8 +66,10 @@ func gotPromise(data string) {
 		if len(mv) >= len(process)/2 {
 			var proposedValue string
 			if aux == 0 {
-				//FIXME: ASK SOMEONE TO ENTER THE VALUE
-				proposedValue = valueToDecide
+				preValue := <-valueChan
+				str := strings.Split(preValue, "@")
+				valueToDecide = str[1]
+				fmt.Println("Value to decide received :", valueToDecide)
 			} else {
 				//Pick the value form the largest round 
 				proposedValue = mv[maxRound]
@@ -100,21 +92,17 @@ func isLeader() bool {
 	return me == leader
 }
 func loop() {
-	for {
-		//FIXME: All processes are going inside because at the first time all are leaders ////////DONE
-		if isLeader() {
-			select {
-			case leader := <-handlTrustChan:
-				gotTrust(leader)
-			case data := <-handlPromiseLeaderChan:
-				gotPromise(data)
-			case sCR := <-handlSysRoundChan:
-				if sCR > systemRound {
-					systemRound = sCR
-				}
-			default: //TODO : check if works correctly
+	for {		
+		select {
+		case leader := <-handlTrustChan:
+			gotTrust(leader)
+		case data := <-handlPromiseLeaderChan:
+			gotPromise(data)
+		case sCR := <-handlSysRoundChan:
+			if sCR > systemRound {
+				systemRound = sCR
 			}
-		}
+		}	
 	}
 }
 

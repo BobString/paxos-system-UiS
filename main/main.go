@@ -129,7 +129,7 @@ func handleClient(conn net.Conn) {
 		case res[0] == "Learn":
 			learnChan <- string1
 		case res[0] == "Value":
-			lead = leaderElection.GetLeader()
+			lead := leaderElection.GetLeader()
 			if lead==ownProcess {
 				valueChan <- string1
 			} else {

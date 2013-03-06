@@ -11,7 +11,7 @@ import (
 // global variables
 var(
 	learnChan = make(chan string,5) // the channel of reception
-	learnedValue string // the learned value
+	learnedValue Pair // the learned value
 	pairMap = make(map[Pair] int) // the map of pairs to decide the value
 	nbProc int // the number of precesses, to determine if a quorum has sent Learn
 )
@@ -44,7 +44,7 @@ func receivingMsgs () {
 		}
 		// we then checl if the a quorum of acceptors has sent the same Learn message
 		if v,_ := pairMap[p]; v>(nbProc/2) {
-			learnedValue = v 
+			learnedValue = p
 		}
 	}
 }
