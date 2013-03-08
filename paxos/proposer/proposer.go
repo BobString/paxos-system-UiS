@@ -22,6 +22,7 @@ var (
 	handlPromiseLeaderChan     = make(chan string, 20) // promise receive chan
 	valueChan                  = make(chan string, 5) // value to decide chan
 	maxRound               int = 0 // 
+	cptProm				   int = 0
 	valueToDecide          string // the value we want to decide
 )
 // Init function
@@ -38,6 +39,7 @@ func gotTrust(leader int) {
 	mv = map[int]string{}
 	for pr := range process {
 		proc := process[pr]
+		cptProm = 0
 		message := "Prepare@" + strconv.Itoa(currentRound)
 		preSend(message, proc)
 	}
@@ -52,6 +54,7 @@ func pickNext(currentRound int) int {
 }
 // function handling the promise message
 func gotPromise(data string) {
+	cptProm = cptProm+1
 	res := strings.Split(data, "@")
 	roundnumber, _ := strconv.Atoi(res[1])
 	lastVotedRound, _ := strconv.Atoi(res[2])
@@ -63,8 +66,8 @@ func gotPromise(data string) {
 		if aux > maxRound {
 			maxRound = aux
 		}
-		if len(mv) >= len(process)/2 {
-			if aux == 0 {
+		if cptProm >= len(process)/2 {
+			if maxRound == 0 {
 				preValue := <-valueChan
 				str := strings.Split(preValue, "@")
 				valueToDecide = str[1]
