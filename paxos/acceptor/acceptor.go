@@ -44,7 +44,7 @@ func prepareListener(inPrepChan chan string) {
 		v1, _ := strconv.Atoi(s[1]) // get the int value for the if
 		v2, _ := strconv.Atoi(s[2]) // get the int value for the preSend func
 		if v1 > lvrn {
-			promise := "Promise@" + strconv.Itoa(v1) + "@" + strconv.Itoa(lvrn) + "@" + lvval + "@"
+			promise := "Promise@" + strconv.Itoa(v1) + "@" + strconv.Itoa(lvrn) + "@" + lvval
 			preSend(promise, v2)
 		}
 	}
@@ -57,7 +57,7 @@ func acceptListener(inAcceptChan chan string, sendRoundChan chan int) {
 		s := strings.Split(v, "@")
 		s1, _ := strconv.Atoi(s[1]) // get the int value for the if
 		if s1 >= lvrn {
-			learn := "Learn@" + s[1] + "@" + s[2] + "@"
+			learn := "Learn@" + s[1] + "@" + s[2]
 			lvrn = s1
 			sendRoundChan <- lvrn
 			lvval = s[2]

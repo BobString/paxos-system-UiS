@@ -77,7 +77,7 @@ func gotPromise(data string) {
 				valueToDecide = mv[maxRound]
 			}
 			curR := strconv.Itoa(currentRound)
-			sendAll("Accept@" + curR + "@" + valueToDecide +"@")
+			sendAll("Accept@" + curR + "@" + valueToDecide)
 		}
 	}
 
