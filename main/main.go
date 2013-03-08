@@ -33,6 +33,7 @@ var (
 	learnChan                  = make(chan string, 20)
 	valueChan                  = make(chan string, 20)
 	ownProcess             int = 0
+	stopFlag			 bool = false 
 )
 
 func main() {
@@ -92,7 +93,7 @@ func handleClient(conn net.Conn) {
 			//If the client close the connection we get out and start listening again
 			break
 		}
-
+		
 		//res is where the message is going to be
 		var res []string
 		string1 := string(buf)
@@ -100,42 +101,44 @@ func handleClient(conn net.Conn) {
 		stringaux := res[1]
 		println("["+time.Now().String()+"]","RECEIVED: ", res[0])
 		//println(" from ", i)
-		switch {
-		case res[0] == "Suspect":
+		switch res[0] {
+		case "Suspect":
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			handlSuspectChan <- i
-		case res[0] == "Restore":
+		case "Restore":
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			handlRecoveryChan <- i
-		case res[0] == "HeartbeatReply":
+		case "HeartbeatReply":
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			handlHBReplyChan <- i
-		case res[0] == "HeartbeatRequest":
+		case "HeartbeatRequest":
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			handlHBRequChan <- i
-		case res[0] == "LeaderRequest":
+		case "LeaderRequest":
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			handlTrustLeaderChan <- i
-		case res[0] == "Promise":
+		case "Promise":
 			handlPromiseLeaderChan <- string1
-		case res[0] == "Prepare":
+		case "Prepare":
 			inPrepChan <- string1
-		case res[0] == "Accept":
+		case "Accept":
 			inAcceptChan <- string1
-		case res[0] == "Learn":
+		case "Learn":
 			learnChan <- string1
-		case res[0] == "Value":
+		case "Value":
 			lead := leaderElection.GetLeader()
 			if lead==ownProcess {
 				valueChan <- string1
 			} else {
 				connector.Send(string1,lead,nil)
-			}			
+			}
+		case "StopServ":
+			stopFlag = true			
 		}
 	}
 

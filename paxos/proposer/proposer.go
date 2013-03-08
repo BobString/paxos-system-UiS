@@ -21,7 +21,7 @@ var (
 	handlSysRoundChan          = make(chan int, 20) // system round number receive chan
 	handlPromiseLeaderChan     = make(chan string, 20) // promise receive chan
 	valueChan                  = make(chan string, 5) // value to decide chan
-	maxRound               int = 0 // /////////////////////////////////////////// ??
+	maxRound               int = 0 // 
 	valueToDecide          string // the value we want to decide
 )
 // Init function
