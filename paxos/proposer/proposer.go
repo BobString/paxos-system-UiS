@@ -64,7 +64,6 @@ func gotPromise(data string) {
 			maxRound = aux
 		}
 		if len(mv) >= len(process)/2 {
-			var proposedValue string
 			if aux == 0 {
 				preValue := <-valueChan
 				str := strings.Split(preValue, "@")
@@ -72,10 +71,10 @@ func gotPromise(data string) {
 				fmt.Println("Value to decide received :", valueToDecide)
 			} else {
 				//Pick the value form the largest round 
-				proposedValue = mv[maxRound]
+				valueToDecide = mv[maxRound]
 			}
 			curR := strconv.Itoa(currentRound)
-			sendAll("Accept@" + curR + "@" + proposedValue)
+			sendAll("Accept@" + curR + "@" + valueToDecide +"@")
 		}
 	}
 

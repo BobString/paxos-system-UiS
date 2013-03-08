@@ -28,6 +28,13 @@ func EntryPoint (count int) (chan string) {
 	return learnChan
 }
 
+func clearMap() {
+	for v := range pairMap {
+		delete(pairMap,v)
+	}
+}
+
+
 func receivingMsgs () {	
 	for {
 		mesg := <- learnChan // wait for Learn message
@@ -43,10 +50,11 @@ func receivingMsgs () {
 		} else {
 			pairMap[p] = 1
 		}
-		// we then checl if the a quorum of acceptors has sent the same Learn message
+		// we then check if the a quorum of acceptors has sent the same Learn message
 		if v,_ := pairMap[p]; v>(nbProc/2) {
 			learnedValue = p
 			println("["+time.Now().String()+"]","NEW VALUE LEARNED :",p.Val)
+			clearMap()
 		}
 	}
 }
