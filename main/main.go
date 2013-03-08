@@ -9,8 +9,8 @@ import (
 	"os"
 	"paxos"
 	"strconv"
-	"time"
 	"strings"
+	"time"
 )
 
 const (
@@ -18,22 +18,22 @@ const (
 )
 
 var (
-	process                    = map[int]string{}
-	handlHBReplyChan           = make(chan int, 20)
-	handlHBRequChan            = make(chan int, 20)
-	handlTrustLeaderChan       = make(chan int, 20)
-	handlRecoveryChan          = make(chan int, 20)
-	handlSuspectChan           = make(chan int, 20)
-	endChan                    = make(chan int, 5)
-	handlLeaderReqChan         = make(chan int, 20)
-	handlTrustChan             = make(chan int, 20)
-	handlPromiseLeaderChan     = make(chan string, 20)
-	inPrepChan                 = make(chan string, 20)
-	inAcceptChan               = make(chan string, 20)
-	learnChan                  = make(chan string, 20)
-	valueChan                  = make(chan string, 20)
-	ownProcess             int = 0
-	stopFlag			 bool = false 
+	process                     = map[int]string{}
+	handlHBReplyChan            = make(chan int, 20)
+	handlHBRequChan             = make(chan int, 20)
+	handlTrustLeaderChan        = make(chan int, 20)
+	handlRecoveryChan           = make(chan int, 20)
+	handlSuspectChan            = make(chan int, 20)
+	endChan                     = make(chan int, 5)
+	handlLeaderReqChan          = make(chan int, 20)
+	handlTrustChan              = make(chan int, 20)
+	handlPromiseLeaderChan      = make(chan string, 20)
+	inPrepChan                  = make(chan string, 20)
+	inAcceptChan                = make(chan string, 20)
+	learnChan                   = make(chan string, 20)
+	valueChan                   = make(chan string, 20)
+	ownProcess             int  = 0
+	stopFlag               bool = false
 )
 
 func main() {
@@ -93,13 +93,21 @@ func handleClient(conn net.Conn) {
 			//If the client close the connection we get out and start listening again
 			break
 		}
-		
+
 		//res is where the message is going to be
 		var res []string
 		string1 := string(buf)
 		res = strings.Split(string1, "@")
+
+		if stopFlag {
+			if res[0] == "RestoreServer" {
+				stopFlag = false
+			}
+			continue
+
+		}
 		stringaux := res[1]
-		println("["+time.Now().String()+"]","RECEIVED: ", res[0])
+		println("["+time.Now().String()+"]", "RECEIVED: ", res[0])
 		//println(" from ", i)
 		switch res[0] {
 		case "Suspect":
@@ -132,13 +140,13 @@ func handleClient(conn net.Conn) {
 			learnChan <- string1
 		case "Value":
 			lead := leaderElection.GetLeader()
-			if lead==ownProcess {
+			if lead == ownProcess {
 				valueChan <- string1
 			} else {
-				connector.Send(string1,lead,nil)
+				connector.Send(string1, lead, nil)
 			}
 		case "StopServ":
-			stopFlag = true			
+			stopFlag = true
 		}
 	}
 
