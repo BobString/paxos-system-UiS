@@ -43,6 +43,7 @@ func prepareListener(inPrepChan chan string) {
 		s := strings.Split(v, "@")
 		v1, _ := strconv.Atoi(s[1]) // get the int value for the if
 		v2, _ := strconv.Atoi(s[2]) // get the int value for the preSend func
+		
 		if v1 > lvrn {
 			promise := "Promise@" + strconv.Itoa(v1) + "@" + strconv.Itoa(lvrn) + "@" + lvval
 			preSend(promise, v2)
@@ -62,6 +63,7 @@ func acceptListener(inAcceptChan chan string, sendRoundChan chan int) {
 			sendRoundChan <- lvrn
 			lvval = s[2]
 			for i := range learnList {
+				//FIXME:
 				preSend(learn, learnList[i])
 			}
 		}
