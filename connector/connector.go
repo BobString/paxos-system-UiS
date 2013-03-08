@@ -40,6 +40,9 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 	print("["+time.Now().String()+"]","SEND: ", message)
 	println(" to ", pr)
 	aux := strings.Contains(message,"Prepare") || strings.Contains(message,"Promise") 
+	if aux {
+		println("PROOOOMISEEEEEEEEE")
+	}
 	if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || aux {
 		ownProcess, _ := GetOwnProcess()
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
