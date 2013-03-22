@@ -1,6 +1,7 @@
 // the type of the values inside the map
 type mapValueType struct {
 	// !!!!!!!!!!!!!!!!!!!!! TODO : do not forget ine the go files to call the values with slosManager.Get...(slot)
+	// variables to add (?) : cptPromise, promiseMap, learnMap, maxRoundInPromises
 	roundNumber,lastVotedRN int
 	lastVotedVal string
 	valueLearned string
