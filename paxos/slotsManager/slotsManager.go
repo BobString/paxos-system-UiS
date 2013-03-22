@@ -1,10 +1,17 @@
 // the type of the values inside the map
 type mapValueType struct {
 	// !!!!!!!!!!!!!!!!!!!!! TODO : do not forget ine the go files to call the values with slosManager.Get...(slot)
-	// variables to add (?) : cptPromise, promiseMap, learnMap, maxRoundInPromises
-	roundNumber,lastVotedRN int
+	roundNumber,lastVotedRN int // 
 	lastVotedVal string
 	valueLearned string
+	cptPromise int
+	maxRoundInPromises int
+	promiseMap = make(map[int] string)
+	learnMap = make(map[LearnPair] int) // the map of pairs to decide the value
+}
+type LearnPair struct {
+	nv int
+	val string
 }
 // the map in question 
 var slotMap = make(map[int] string)
@@ -26,6 +33,15 @@ func GetValueLearned(slot int) string {
 	}
 	return slotMap[slot].valueLearned
 }
+func GetCptPromise (slot int) int {
+	return slotMap[slot].cptPromise
+}
+func GetMaxRoundInPromises (slot int) int {
+	return slotMap[slot].maxRoundInPromises
+}
+func GetValueFromLearnPair (p LearnPair) {
+	return p.val
+}
 
 //////////// SETTERS ////////////
 func SetRoundNumber (slot int, val int) {
@@ -45,6 +61,36 @@ func SetValueToLearn (slot int, val string) int {
 	return len(slotMap)
 }
 
+
+/////// FUNCTIONS ON MAPS ///////
+//// Promise map
+func AddToPromiseMap(slot int, key int, val string) {
+	slotMap[slot].promiseMap[key] = val
+}
+func ClearPromiseMap(slot int) {
+	for v,_ := range slotMap[slot].promiseMap {
+		delete(slotMap[slot].promiseMap,v)
+	}
+}
+func GetFromPromiseMap(slot int, key int) string {
+	return slotMap[slot].promiseMap[key]
+}
+//// Learn map
+func AddToLearnMap(slot int, key LearnPair, val int) {
+	slotMap[slot].learnMap[key] = val
+}
+func ClearLearnMap(slot int) {
+	for v,_ := range slotMap[slot].learnMap {
+		delete(slotMap[slot].learnMap,v)
+	}
+}
+func GetFromLearnMap(slot int, key LearnPair) int {
+	return slotMap[slot].learnMap[key]
+}
+func BelongsToLearnMap(slot int, key LearnPair) bool {
+	_, ok := slotMap[slot].learnMap[key]
+	return ok
+}
 
 
 // returns the smallest slot with no learned value yet

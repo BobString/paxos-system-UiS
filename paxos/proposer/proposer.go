@@ -6,6 +6,7 @@ import (
 	"leaderElection"
 	"strconv"
 	"strings"
+	"slotsManager"
 	//"time"
 )
 
@@ -13,7 +14,6 @@ import (
 var (
 	mv                     = map[int]string{} //Round-vote map 
 	process                []int // list of processes
-	acceptors              []int // list of acceptors : USEFUL ??? //////
 	leader                 int // currentLeader
 	currentRound           int = 0 //our ID at first
 	systemRound            int = 0 // current system round number
@@ -111,6 +111,7 @@ func loop() {
 			if sCR > systemRound {//// FIXME : modify for slotsManager !!!!!!!!!!
 				systemRound = sCR
 			}
+		// TODO : add the case when we receive a slot number from the learner, so we have to send prepare messages !!
 		}	
 	}
 }
