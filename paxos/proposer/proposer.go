@@ -12,68 +12,72 @@ import (
 
 // global variables
 var (
-	mv                     = map[int]string{} //Round-vote map 
+	//mv                     = map[int]string{} //Round-vote map 
 	process                []int // list of processes
 	leader                 int // currentLeader
-	currentRound           int = 0 //our ID at first
-	systemRound            int = 0 // current system round number
+	//currentRound           int = 0 //our ID at first
+	//systemRound            int = 0 // current system round number
 	handlTrustChan             = make(chan int, 20) // trust receive chan
-	handlSysRoundChan          = make(chan int, 20) // system round number receive chan
+	//handlSysRoundChan          = make(chan int, 20) // system round number receive chan
 	handlPromiseLeaderChan     = make(chan string, 20) // promise receive chan
 	valueChan                  = make(chan string, 5) // value to decide chan
-	maxRound               int = 0 // 
-	cptProm				   int = 0
+	newSlotChan				   = make(chan int, 5))
+	//maxRound               int = 0 // 
+	//cptProm				   int = 0
 	
 )
 // Init function
-func EntryPoint(p []int, sysRoundChan chan int) (chan int, chan string, chan string) {
+func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
 	process = p
-	handlSysRoundChan = sysRoundChan
+	//handlSysRoundChan = sysRoundChan
 	currentRound, _ = connector.GetOwnProcess()
 	go loop()
-	return handlTrustChan, handlPromiseLeaderChan, valueChan
+	return handlTrustChan, handlPromiseLeaderChan, valueChan,newSlotChan
 }
 // what we do when we become the leader : change the round number
 func gotTrust(leader int) {
-	currentRound = pickNext(currentRound)  //// FIXME : modify for slotsManager !!!!!!!!!!
-	mv = map[int]string{}
+	slots := slotsManager.GetSlots()
+	for i := range slots {
+		pickNext(i,slotsManager.GetRoundNumber(i))
+		prepareSlot(i)
+	}
+}
+func prepareSlot (slot int) {
 	for pr := range process {
 		proc := process[pr]
-		cptProm = 0
-		message := "Prepare@" + strconv.Itoa(currentRound)
+		//////////////////// MESSAGE FORMAT : Prepare@RN@slot
+		message := "Prepare@" + strconv.Itoa(slotsManager.GetRoundNumber(i)) + "@" + strconv.Itoa(i)
 		preSend(message, proc)
 	}
 }
 // the round number increase function
-func pickNext(currentRound int) int {
-//FIXME : no need for systemRound.. just add 1 to slotsManager.GetRoundNumber ?
-/*	for currentRound < systemRound {//// FIXME : modify for slotsManager !!!!!!!!!!
-		currentRound = currentRound + len(process)//// FIXME : modify for slotsManager !!!!!!!!!!
-	}*/
-// FIXING
-	currentRound := slotsManager.GetRoundNumber() +1// TO TEST
+func pickNext(slot,currentRound int) int {
+	currentRound := slotsManager.GetRoundNumber(slot) +1// TO TEST
 	slotsManager.SetRoundNumber(currentRound)
 	return currentRound
 }
+
 // function handling the promise message
 func gotPromise(data string) {
-	// add variable cptProm to slotsManager ??
-	cptProm = cptProm+1 //// FIXME : modify for slotsManager !!!!!!!!!!
 	res := strings.Split(data, "@")
 	roundnumber, _ := strconv.Atoi(res[1])
 	lastVotedRound, _ := strconv.Atoi(res[2])
 	lastVotedValue := res[3]
 	slot = strconv.Atoi(res[4])
+	//slotsManager.     FIWME : change here the cptPromise ?
+	slotsManager.IncCptProm(slot)
 	//processID := res[4]
-	if roundnumber == currentRound {//// FIXME : modify for slotsManager !!!!!!!!!!
-		aux := lastVotedRound//// FIXME : modify for slotsManager !!!!!!!!!!
-		mv[aux] = lastVotedValue//// FIXME : modify for slotsManager !!!!!!!!!!
-		if aux > maxRound {
-			maxRound = aux
+	slotRN = slotsManager.GetRoundNumber(slot)
+	if roundnumber == slotRN {//// FIXME : modify for slotsManager !!!!!!!!!!
+		//aux := lastVotedRound//// FIXME : modify for slotsManager !!!!!!!!!!
+		//mv[aux] = lastVotedValue//// FIXME : modify for slotsManager !!!!!!!!!!
+		slotsManager.AddToPromiseMap(slot,lastVotedRound,lastVotedValue)
+		if lastVotedRound > slotsManager.GetMaxRoundInPromises(slot) {
+			slotsManager.SetMaxRoundInPromises(slot,lastVotedRound)
 		}
-		if cptProm >= len(process)/2 {
+		if slotsManager.GetCptPromise(slot) >= len(process)/2 {
 			var valueToDecide string // the value we want to decide
-			if maxRound == 0 {
+			if slotsManager.GetMaxRoundInPromises(slot) == 0 {
 				preValue := <-valueChan
 				str := strings.Split(preValue, "@")
 				valueToDecide = str[1]
@@ -81,9 +85,9 @@ func gotPromise(data string) {
 				//// FIXME : modify for slotsManager !!!!!!!!!!
 			} else {
 				//Pick the value form the largest round 
-				valueToDecide = mv[maxRound]
+				valueToDecide := slotsManager.GetFromPromiseMap(slotsManager.GetMaxRoundInPromises(slot))
 			}
-			curR := strconv.Itoa(currentRound)//// FIXME : modify for slotsManager !!!!!!!!!!
+			curR := strconv.Itoa(slotRN)//// FIXME : modify for slotsManager !!!!!!!!!!
 			sendAll("Accept@" + curR + "@" + valueToDecide)
 		}
 	}
@@ -107,10 +111,8 @@ func loop() {
 			gotTrust(leader)
 		case data := <-handlPromiseLeaderChan:
 			gotPromise(data)
-		case sCR := <-handlSysRoundChan:
-			if sCR > systemRound {//// FIXME : modify for slotsManager !!!!!!!!!!
-				systemRound = sCR
-			}
+		case newSlot := <-newSlotChan:
+			prepareSlot(newSlot)
 		// TODO : add the case when we receive a slot number from the learner, so we have to send prepare messages !!
 		}	
 	}

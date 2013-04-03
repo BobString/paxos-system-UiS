@@ -18,6 +18,14 @@ var slotMap = make(map[int] string)
 
 
 //////////// GETTERS ////////////
+func GetSlots () []int {
+	var res []int = make([]int, len(slotMap))
+	i := 0
+	for v,_ := range slotMap {
+		res[i] = v
+		i = i+1
+	}
+}
 func GetRoundNumber (slot int) int {
 	return slotMap[slot].roundNumber	
 }
@@ -60,6 +68,12 @@ func SetValueToLearn (slot int, val string) int {
 	// and we return the value of the added slot (TODO : to be sent to the proposer for a Prepare message sending)
 	return len(slotMap)
 }
+func SetMaxRoundInPromises (slot,maxR int) {
+	slotMap[slot].maxRoundInPromises = maxR
+}
+func IncCptProm (slot int) {
+	slotMap[slot].cptPromises = slotMap[slot].cptPromises +1
+}
 
 
 /////// FUNCTIONS ON MAPS ///////
@@ -69,7 +83,7 @@ func AddToPromiseMap(slot int, key int, val string) {
 }
 func ClearPromiseMap(slot int) {
 	for v,_ := range slotMap[slot].promiseMap {
-		delete(slotMap[slot].promiseMap,v)
+		delete(slotMap[slot].promiseMap,v)		
 	}
 }
 func GetFromPromiseMap(slot int, key int) string {

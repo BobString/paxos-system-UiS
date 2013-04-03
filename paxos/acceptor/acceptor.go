@@ -27,10 +27,10 @@ var (
 //	inPrepChan : when the server receives a Prepare message, it is sent to inPrepChan
 //	inAcceptChan : idem with Accept messages
 // 	sendRoundChan : to send to the Proposer the current system round number
-func EntryPoint(list []int, sendRoundChan chan int) (chan string, chan string) {
+func EntryPoint(list []int) (chan string, chan string) {
 	learnList = list
 	go prepareListener(inPrepChan)
-	go acceptListener(inAcceptChan, sendRoundChan)
+	go acceptListener(inAcceptChan)
 	return inPrepChan, inAcceptChan
 }
 
@@ -51,7 +51,7 @@ func prepareListener(inPrepChan chan string) {
 	}
 }
 
-func acceptListener(inAcceptChan chan string, sendRoundChan chan int) {
+func acceptListener(inAcceptChan chan string) {
 	for {
 		// wait for inAcceptChan
 		v := <-inAcceptChan

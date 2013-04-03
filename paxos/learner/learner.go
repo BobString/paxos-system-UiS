@@ -13,6 +13,7 @@ import (
 // global variables
 var(
 	learnChan = make(chan string,5) // the channel of reception
+	slotChan chan int
 	//learnedValue Pair // the learned value
 	//pairMap = make(map[Pair] int) // the map of pairs to decide the value
 	nbProc int // the number of precesses, to determine if a quorum has sent Learn
@@ -23,8 +24,9 @@ var(
 	Val string
 }*/
 // Init function
-func EntryPoint (count int) (chan string) {
+func EntryPoint (count int, newSlotChan chan int) (chan string) {
 	nbProc = count
+	slotChan = newSlotChan
 	go receivingMsgs()
 	return learnChan
 }
@@ -58,6 +60,7 @@ func receivingMsgs () {
 			nextSlot := slotsManager.SetValueToLearn(slotsManager.GetValueFromLearnPair(p))
 			//learnedValue = p
 			//TODO : send to the proposer nextSlot, so he can send prepare !!!!!
+			slotChan <- nextSlot
 			println("["+time.Now().String()+"]","NEW VALUE LEARNED :",p.Val,"in slot",res[3])
 			clearMap(slot)
 		}

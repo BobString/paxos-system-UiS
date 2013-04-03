@@ -25,8 +25,8 @@ func EntryPoint() (chan int, chan string, chan string, chan string, chan string,
 		i++
 	}
 	//
-	trustChan, promChan, valueChan := proposer.EntryPoint(p, acceptToPropChan)
+	trustChan, promChan, valueChan, slotChan := proposer.EntryPoint(p, acceptToPropChan)
 	prepChan, acceptChan := acceptor.EntryPoint(p, acceptToPropChan)
-	learnChan := learner.EntryPoint(len(p))
+	learnChan := learner.EntryPoint(len(p),slotChan)
 	return trustChan, prepChan, promChan, acceptChan, learnChan, valueChan
 }
