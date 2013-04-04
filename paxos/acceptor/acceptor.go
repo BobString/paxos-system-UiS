@@ -29,12 +29,23 @@ var (
 // 	sendRoundChan : to send to the Proposer the current system round number
 func EntryPoint(list []int) (chan string, chan string) {
 	learnList = list
-	go prepareListener(inPrepChan)
-	go acceptListener(inAcceptChan)
+	go readyListener ()
 	return inPrepChan, inAcceptChan
 }
 
-func prepareListener(inPrepChan chan string) {
+func readyListener () {
+	for {
+		select {
+			case prepare := <-inPrepChan:
+				go prepareHandler (prepare)
+			case accept := <-inAcceptChan:
+				go acceptHandler (accept)
+		}
+	}
+}
+
+
+func prepareHandler(prepare string) {
 	for {
 		// wait for inPrepChan
 		v := <-inPrepChan
@@ -51,7 +62,7 @@ func prepareListener(inPrepChan chan string) {
 	}
 }
 
-func acceptListener(inAcceptChan chan string) {
+func acceptHandler(inAcceptChan chan string) {
 	for {
 		// wait for inAcceptChan
 		v := <-inAcceptChan

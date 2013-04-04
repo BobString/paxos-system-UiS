@@ -32,8 +32,8 @@ var (
 	inAcceptChan                = make(chan string, 20)
 	learnChan                   = make(chan string, 20)
 	valueChan                   = make(chan string, 20)
+	stopChan					= make(chan bool, 5)
 	ownProcess             int  = 0
-	stopFlag               bool = false
 )
 
 func main() {
@@ -102,6 +102,7 @@ func handleClient(conn net.Conn) {
 		if stopFlag {
 			if res[0] == "RestoreServer" {
 				stopFlag = false
+				connector.Stopped = false
 			}
 			continue
 
@@ -147,6 +148,7 @@ func handleClient(conn net.Conn) {
 			}
 		case "StopServ":
 			stopFlag = true
+			connector.Stopped = true
 		}
 	}
 

@@ -19,10 +19,11 @@ var (
 	}
 	ownProcess int    = 0
 	ownIP      string = ""
+	Stopped bool = false
 )
 
 func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
-
+	if !Stopped {
 	if connect == nil {
 		service := process[pr]
 		tcpAddr, err := net.ResolveTCPAddr("tcp", service)
@@ -36,9 +37,10 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 			return nil, err
 		}
 	}
-
-	print("["+time.Now().String()+"]","SEND: ", message)
-	println(" to ", pr)
+	if !strings.Contains(message,"Heartbeat"){
+		print("["+time.Now().String()+"]","SEND: ", message)
+		println(" to ", pr)
+	}
 	aux := strings.Contains(message,"Prepare") || strings.Contains(message,"Promise")
 	if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || aux {
 		ownProcess, _ := GetOwnProcess()
@@ -50,9 +52,9 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 		return connect, err
 	}
 	_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
-
+	}
 	return connect, err
-
+	
 }
 func GetProcesses() map[int]string {
 	return process
