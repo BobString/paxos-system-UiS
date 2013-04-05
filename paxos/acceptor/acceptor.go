@@ -62,7 +62,7 @@ func prepareHandler(prepare string) {
 	}
 }
 
-func acceptHandler(inAcceptChan chan string) {
+func acceptHandler(accept string) {
 	for {
 		// wait for inAcceptChan
 		v := <-inAcceptChan

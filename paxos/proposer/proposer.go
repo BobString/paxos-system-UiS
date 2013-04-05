@@ -51,7 +51,7 @@ func prepareSlot(slot int) {
 // the round number increase function
 func pickNext(slot int) int {
     currentRound := slotsManager.GetRoundNumber(slot) + 1 // TO TEST
-    slotsManager.SetRoundNumber(slot, scurrentRound)
+    slotsManager.SetRoundNumber(slot, currentRound)
     return currentRound
 }
 // function handling the promise message

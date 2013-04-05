@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"errors"
+	//"errors"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
 
 func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 	var err error
-	err := nil
+	err = nil
 	if !Stopped {
 		if connect == nil {
 			service := process[pr]
