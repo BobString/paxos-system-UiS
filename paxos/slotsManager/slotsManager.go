@@ -112,15 +112,14 @@ func getSmallestUnlearned() int {
 }
 // returns the available slots (with no learned value)
 func GetAvailableSlots() []int {
-    slot := getSmallestUnlearned()
-    index := 1
-    var res []int
-    for slot < len(slotMap) {
-        if slotMap[slot].valueLearned == "" {
-            res[index] = slot
-            index = index + 1
-        }
-        slot = slot + 1
+    slotMin := getSmallestUnlearned()
+    slotMax := len(slotMap)
+	length := slotMax-slotMin+1
+	index := 0
+	res = make([]int,length)
+    for index < length {
+		res[index] = slotMin + index
+        index = index + 1
     }
     return res
 }

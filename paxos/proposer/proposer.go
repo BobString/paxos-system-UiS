@@ -36,7 +36,6 @@ func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
 func gotTrust(leader int) {
     slots := slotsManager.GetAvailableSlots()
     for i := range slots {
-        pickNext(i)
         prepareSlot(i)
     }
 }
@@ -44,7 +43,7 @@ func prepareSlot(slot int) {
     for pr := range process {
         proc := process[pr]
         //////////////////// MESSAGE FORMAT : Prepare@RN@slot
-        message := "Prepare@" + strconv.Itoa(slotsManager.GetRoundNumber(slot)) + "@" + strconv.Itoa(slot)
+        message := "Prepare@" + strconv.Itoa(pickNext(slot)) + "@" + strconv.Itoa(slot)
         preSend(message, proc)
     }
 }
