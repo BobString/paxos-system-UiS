@@ -39,7 +39,7 @@ func learnListener () {
 	}
 }
 
-func learnHandler(learn) {
+func learnHandler(learn string) {
 	res := strings.Split(learn, "@")
     a, _ := strconv.Atoi(res[1])           // to get the int for the round number
     p := slotsManager.LearnPair{a, res[2]} // creation of the pair to store in the map

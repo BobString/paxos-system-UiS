@@ -23,6 +23,7 @@ var (
 )
 
 func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
+	var err error
 	if !Stopped {
 	if connect == nil {
 		service := process[pr]
