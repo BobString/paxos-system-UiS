@@ -106,12 +106,11 @@ func loop() {
     for {
         select {
         case leader := <-handlTrustChan:
-            go gotTrust(leader)
+            gotTrust(leader)
         case data := <-handlPromiseLeaderChan:
-            go gotPromise(data)
+            gotPromise(data)
         case newSlot := <-newSlotChan:
-            go prepareSlot(newSlot)
-            // TODO : add the case when we receive a slot number from the learner, so we have to send prepare messages !!
+            prepareSlot(newSlot)
         }
     }
 }

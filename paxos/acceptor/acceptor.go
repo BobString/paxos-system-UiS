@@ -37,9 +37,9 @@ func readyListener () {
 	for {
 		select {
 			case prepare := <-inPrepChan:
-				go prepareHandler (prepare)
+				prepareHandler (prepare)
 			case accept := <-inAcceptChan:
-				go acceptHandler (accept)
+				acceptHandler (accept)
 		}
 	}
 }
