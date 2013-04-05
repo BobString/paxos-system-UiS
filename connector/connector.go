@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"errors"
 )
 
 var (
@@ -23,6 +24,7 @@ var (
 )
 
 func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
+	err := errors.New("")
 	if !Stopped {
 		if connect == nil {
 			service := process[pr]
@@ -52,14 +54,12 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 			return connect, err
 		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
-		return connect, err
 	} else {
 		err := errors.New("Stopped Serv")
-		return connect, err
-	}
-	
-	
+	}	
+	return connect, err
 }
+
 func GetProcesses() map[int]string {
 	return process
 }
