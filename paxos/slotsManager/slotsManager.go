@@ -52,22 +52,27 @@ func GetValueFromLearnPair(p LearnPair) string {
 func SetRoundNumber(slot int, val int) {
     slotType := slotMap[slot]
     slotType.RoundNumber = val
+	slotMap[slot]=slotType
 }
 func SetLastVotedRN(slot int, val int) {
     slotType := slotMap[slot]
     slotType.LastVotedRN = val
+	slotMap[slot]=slotType
 }
 func SetLastVotedVal(slot int, val string) {
     slotType := slotMap[slot]
     slotType.LastVotedVal = val
+	slotMap[slot]=slotType
 }
 func SetValueToDecide (slot int, val string){
 	slotType := slotMap[slot]
 	slotType.ValueToDecide = val
+	slotMap[slot]=slotType
 }
 func SetValueToLearn(slot int, val string) int {
     slotType := slotMap[slot]
     slotType.ValueLearned = val
+	slotMap[slot]=slotType
     // a value has been learned : we create a new entry in the map
     createNewEntry()
     // and we return the value of the added slot (TODO : to be sent to the proposer for a Prepare message sending)
@@ -76,15 +81,19 @@ func SetValueToLearn(slot int, val string) int {
 func SetMaxRoundInPromises(slot, maxR int) {
     slotType := slotMap[slot]
     slotType.MaxRoundInPromises = maxR
+	slotMap[slot]=slotType
 }
 func IncCptProm(slot int) {
     slotType := slotMap[slot]
     slotType.CptPromise = slotType.CptPromise + 1
+	slotMap[slot]=slotType
 }
 /////// FUNCTIONS ON MAPS ///////
 //// Promise map
 func AddToPromiseMap(slot int, key int, val string) {
-    slotMap[slot].PromiseMap[key] = val
+	slotType = slotMap[slot]
+    slotType.PromiseMap[key] = val
+	slotMap[slot] = slotType
 }
 func ClearPromiseMap(slot int) {
     for v, _ := range slotMap[slot].PromiseMap {
@@ -135,7 +144,7 @@ func GetAvailableSlots() []int {
 func createNewEntry() {
     promMap := make(map[int]string)
     leaMap := make(map[LearnPair]int)
-    mapValueNil := mapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
+    mapValueNil := MapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
     slotMap[len(slotMap)+1] = mapValueNil
 }
 func EntryPoint() {
