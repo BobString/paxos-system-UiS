@@ -53,6 +53,8 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 		return connect, err
 	}
 	_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
+	} else {
+		err = error.New("Stopped Serv")
 	}
 	return connect, err
 	
