@@ -91,7 +91,7 @@ func IncCptProm(slot int) {
 /////// FUNCTIONS ON MAPS ///////
 //// Promise map
 func AddToPromiseMap(slot int, key int, val string) {
-	slotType = slotMap[slot]
+	slotType := slotMap[slot]
     slotType.PromiseMap[key] = val
 	slotMap[slot] = slotType
 }
