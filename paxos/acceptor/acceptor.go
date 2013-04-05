@@ -36,20 +36,18 @@ func EntryPoint(list []int) (chan string, chan string) {
 func readyListener () {
 	for {
 		select {
-			case prepare := <-inPrepChan:
-				prepareHandler (prepare)
-			case accept := <-inAcceptChan:
-				acceptHandler (accept)
+		case prepare := <-inPrepChan:
+			prepareHandler (prepare)
+		case accept := <-inAcceptChan:
+			acceptHandler (accept)
 		}
 	}
 }
 
 
 func prepareHandler(prepare string) {
-	for {
 		// wait for inPrepChan
-		v := <-inPrepChan
-		s := strings.Split(v, "@")
+		s := strings.Split(prepare, "@")
 		v1, _ := strconv.Atoi(s[1]) // get the int value for the if
 		v2, _ := strconv.Atoi(s[2]) // get the int value for the preSend func
 		v3, _ := strconv.Atoi(s[3]) // the slot number (instance of paxos)
@@ -59,7 +57,6 @@ func prepareHandler(prepare string) {
 			promise := "Promise@" + strconv.Itoa(v1) + "@" + strconv.Itoa(lvrn) + "@" + lvval + "@" + strconv.Itoa(v3)
 			preSend(promise, v2)
 		}
-	}
 }
 
 func acceptHandler(accept string) {
