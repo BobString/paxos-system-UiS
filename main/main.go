@@ -34,6 +34,7 @@ var (
 	valueChan                   = make(chan string, 20)
 	stopChan					= make(chan bool, 5)
 	ownProcess             int  = 0
+	stopFlag				bool = false
 )
 
 func main() {
@@ -146,7 +147,7 @@ func handleClient(conn net.Conn) {
 			} else {
 				connector.Send(string1, lead, nil)
 			}
-		case "StopServ":
+		case "StopServer":
 			stopFlag = true
 			connector.Stopped = true
 		}
