@@ -24,7 +24,8 @@ var (
 )
 
 func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
-	err := errors.New("")
+	var err error
+	err := nil
 	if !Stopped {
 		if connect == nil {
 			service := process[pr]
@@ -54,9 +55,10 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 			return connect, err
 		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
-	} else {
-		err := errors.New("Stopped Serv")
-	}	
+		checkError(err)
+	} /*else {
+		err := nil
+	}	*/
 	return connect, err
 }
 
