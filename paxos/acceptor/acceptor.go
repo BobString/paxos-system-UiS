@@ -47,15 +47,16 @@ func readyListener () {
 
 func prepareHandler(prepare string) {
 		// wait for inPrepChan
+	println("################### PREPARE HANDLER", prepare)
 		s := strings.Split(prepare, "@")
-		v1, _ := strconv.Atoi(s[1]) // get the int value for the if
-		v2, _ := strconv.Atoi(s[2]) // get the int value for the preSend func
-		v3, _ := strconv.Atoi(s[3]) // the slot number (instance of paxos)
-		lvrn := slotsManager.GetLastVotedRN(v3)
-		if v1 > lvrn {
-			lvval := slotsManager.GetLastVotedVal(v3)
-			promise := "Promise@" + strconv.Itoa(v1) + "@" + strconv.Itoa(lvrn) + "@" + lvval + "@" + strconv.Itoa(v3)
-			preSend(promise, v2)
+		prepLVRN, _ := strconv.Atoi(s[1]) // get the int value for the if
+		prepSender, _ := strconv.Atoi(s[3]) // get the int value for the preSend func
+		slot, _ := strconv.Atoi(s[2]) // the slot number (instance of paxos)
+		lvrn := slotsManager.GetLastVotedRN(slot)
+		if prepLVRN > lvrn {
+			lvval := slotsManager.GetLastVotedVal(slot)
+			promise := "Promise@" + strconv.Itoa(prepLVRN) + "@" + strconv.Itoa(lvrn) + "@" + lvval + "@" + strconv.Itoa(slot)
+			preSend(promise, prepSender)
 		}
 }
 

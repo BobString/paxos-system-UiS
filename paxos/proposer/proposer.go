@@ -87,7 +87,7 @@ func gotPromise(data string) {
                 valueToDecide = slotsManager.GetFromPromiseMap(slot, slotsManager.GetMaxRoundInPromises(slot))
             }
             curR := strconv.Itoa(slotRN) //// FIXME : modify for slotsManager !!!!!!!!!!
-            sendAll("Accept@" + curR + "@" + valueToDecide)
+            sendAll("Accept@" + curR + "@" + valueToDecide + "@" + strconv.Itoa(slot))
         }
     }
 }
