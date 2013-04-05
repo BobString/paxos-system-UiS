@@ -67,15 +67,17 @@ func gotPromise(data string) {
     slotsManager.IncCptProm(slot)
     //processID := res[4]
     slotRN := slotsManager.GetRoundNumber(slot)
-    if roundnumber == slotRN { //// FIXME : modify for slotsManager !!!!!!!!!!
-        //aux := lastVotedRound//// FIXME : modify for slotsManager !!!!!!!!!!
-        //mv[aux] = lastVotedValue//// FIXME : modify for slotsManager !!!!!!!!!!
+	println("############PROMISE DECRYPTED")
+    if roundnumber == slotRN {
+		println("$$$$$$$$ADDING TO PROMISE MAP") 
         slotsManager.AddToPromiseMap(slot, lastVotedRound, lastVotedValue)
         if lastVotedRound > slotsManager.GetMaxRoundInPromises(slot) {
             slotsManager.SetMaxRoundInPromises(slot, lastVotedRound)
         }
         if slotsManager.GetCptPromise(slot) >= len(process)/2 {
-            waitForValue(slot)
+   			println("WAITING FOR VALUE ##########")         
+			waitForValue(slot)
+			println("VALUE DECIDED !!!!!!!!!!!!!!!!!")
             curR := strconv.Itoa(slotRN) //// FIXME : modify for slotsManager !!!!!!!!!!
             sendAll("Accept@" + curR + "@" + slotsManager.GetValueToDecide(slot) + "@" + strconv.Itoa(slot))
         }
@@ -85,9 +87,9 @@ func waitForValue(slot int) {
 	if slotsManager.GetMaxRoundInPromises(slot) == 0 {
 		preValue := <-valueChan
 		str := strings.Split(preValue, "@")
-	    valueToDecide = str[1]
+	    valueToDecide := str[1]
 		slotsManager.SetValueToDecide(slot, valueToDecide)
-		fmt.Println("Value to decide received :", valueToDecide, "in slot", res[4])
+		fmt.Println("Value to decide received :", valueToDecide, "in slot", strconv.Itoa(slot))
 	} else {
 		slotsManager.SetValueToDecide(slot,slotsManager.GetFromPromiseMap(slot, slotsManager.GetMaxRoundInPromises(slot)))
 	}

@@ -135,7 +135,7 @@ func GetAvailableSlots() []int {
 func createNewEntry() {
     promMap := make(map[int]string)
     leaMap := make(map[LearnPair]int)
-    mapValueNil := mapValueType{0, 0, "", "", 0, 0, promMap, leaMap}
+    mapValueNil := mapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
     slotMap[len(slotMap)+1] = mapValueNil
 }
 func EntryPoint() {
