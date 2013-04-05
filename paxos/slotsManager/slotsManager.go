@@ -104,8 +104,8 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
 }
 // returns the smallest slot with no learned value yet
 func getSmallestUnlearned() int {
-    i := 0
-    for GetValueLearned(i) != "" {
+    i := 1
+    for slotMap[i].valueLearned != "" {
         i = i + 1
     }
     return i
@@ -113,10 +113,10 @@ func getSmallestUnlearned() int {
 // returns the available slots (with no learned value)
 func GetAvailableSlots() []int {
     slot := getSmallestUnlearned()
-    index := 0
+    index := 1
     var res []int
     for slot < len(slotMap) {
-        if GetValueLearned(slot) == "" {
+        if slotMap[slot].valueLearned == "" {
             res[index] = slot
             index = index + 1
         }
