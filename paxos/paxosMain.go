@@ -5,6 +5,7 @@ import (
     "paxos/acceptor"
     "paxos/learner"
     "paxos/proposer"
+	"paxos/slotsManager"
 )
 // global variables :
 var (
@@ -21,6 +22,7 @@ func EntryPoint() (chan int, chan string, chan string, chan string, chan string,
         i++
     }
     //
+	slotsManager.EntryPoint()
     trustChan, promChan, valueChan, slotChan := proposer.EntryPoint(p)
     prepChan, acceptChan := acceptor.EntryPoint(p)
     learnChan := learner.EntryPoint(len(p), slotChan)
