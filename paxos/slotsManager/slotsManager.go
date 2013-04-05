@@ -116,7 +116,7 @@ func GetAvailableSlots() []int {
     slotMax := len(slotMap)
 	length := slotMax-slotMin+1
 	index := 0
-	res = make([]int,length)
+	res := make([]int,length)
     for index < length {
 		res[index] = slotMin + index
         index = index + 1

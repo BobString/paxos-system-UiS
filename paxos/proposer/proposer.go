@@ -34,9 +34,11 @@ func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
 }
 // what we do when we become the leader : change the round number
 func gotTrust(leader int) {
+	println("GOT THE TRUST !! STARTING PREPARING SLOTS")
     slots := slotsManager.GetAvailableSlots()
     for i := range slots {
-        prepareSlot(i)
+		println("PREPARING SLOT",strconv.Itoa(slots[i]))
+        prepareSlot(slots[i])
     }
 }
 func prepareSlot(slot int) {
@@ -44,6 +46,7 @@ func prepareSlot(slot int) {
         proc := process[pr]
         //////////////////// MESSAGE FORMAT : Prepare@RN@slot
         message := "Prepare@" + strconv.Itoa(pickNext(slot)) + "@" + strconv.Itoa(slot)
+		println("PREPARE TO BE SENT :", message,"in slot",strconv.Itoa(slot))
         preSend(message, proc)
     }
 }
