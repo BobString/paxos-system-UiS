@@ -38,6 +38,7 @@ func gotTrust(leader int) {
     slots := slotsManager.GetAvailableSlots()
     for i := range slots {
 		println("PREPARING SLOT",strconv.Itoa(slots[i]))
+		slotsManager.
         prepareSlot(slots[i])
     }
 }

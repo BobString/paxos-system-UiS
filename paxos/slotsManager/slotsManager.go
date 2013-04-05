@@ -51,7 +51,7 @@ func GetValueFromLearnPair(p LearnPair) string {
 //////////// SETTERS ////////////
 func SetRoundNumber(slot int, val int) {
     slotType := slotMap[slot]
-    slotType.roundNumber = val
+    slotType.roundNumber := val
 }
 func SetLastVotedRN(slot int, val int) {
     slotType := slotMap[slot]
