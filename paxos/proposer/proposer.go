@@ -55,6 +55,7 @@ func prepareSlot(slot int) {
 func pickNext(slot int) int {
     currentRound := slotsManager.GetRoundNumber(slot) + 1 // TO TEST
     slotsManager.SetRoundNumber(slot, currentRound)
+	println("Round number set :", strconv.Itoa(currentRound), "and get :", strconv.Itoa(slotsManager.GetRoundNumber(slot)))
     return currentRound
 }
 // function handling the promise message
