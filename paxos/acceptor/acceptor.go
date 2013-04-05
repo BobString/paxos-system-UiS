@@ -65,7 +65,7 @@ func acceptHandler(accept string) {
 		// wait for inAcceptChan
 		s := strings.Split(accept, "@")
 		rN, _ := strconv.Atoi(s[1]) // get the int value for the if
-		val,_ := strconv.Atoi(s[2]) // the value
+		val := s[2] // the value
 		slot, _ := strconv.Atoi(s[3]) // the slot number (instance of paxos)
 		lvrn := slotsManager.GetLastVotedRN(slot)
 		if rN >= lvrn {

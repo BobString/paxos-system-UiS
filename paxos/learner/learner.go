@@ -35,7 +35,7 @@ func clearMap(slot int) {
 func learnListener () {
 	for {
 		learn := <-learnChan 
-		go learnHandler(learn)
+		learnHandler(learn)
 	}
 }
 
