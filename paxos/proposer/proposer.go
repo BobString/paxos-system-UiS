@@ -67,7 +67,7 @@ func gotPromise(data string) {
     slotsManager.IncCptProm(slot)
     //processID := res[4]
     slotRN := slotsManager.GetRoundNumber(slot)
-	println("############PROMISE DECRYPTED")
+	println("############PROMISE DECRYPTED", strconv.Itoa(roundnumber),strconv.Itoa(slotRN))
     if roundnumber == slotRN {
 		println("$$$$$$$$ADDING TO PROMISE MAP") 
         slotsManager.AddToPromiseMap(slot, lastVotedRound, lastVotedValue)
