@@ -75,21 +75,22 @@ func gotPromise(data string) {
             slotsManager.SetMaxRoundInPromises(slot, lastVotedRound)
         }
         if slotsManager.GetCptPromise(slot) >= len(process)/2 {
-            var valueToDecide string // the value we want to decide
-            if slotsManager.GetMaxRoundInPromises(slot) == 0 {
-                preValue := <-valueChan
-                str := strings.Split(preValue, "@")
-                valueToDecide = str[1]
-                fmt.Println("Value to decide received :", valueToDecide, "in slot", res[4])
-                //// FIXME : modify for slotsManager !!!!!!!!!!
-            } else {
-                //Pick the value form the largest round
-                valueToDecide = slotsManager.GetFromPromiseMap(slot, slotsManager.GetMaxRoundInPromises(slot))
-            }
+            waitForValue(slot)
             curR := strconv.Itoa(slotRN) //// FIXME : modify for slotsManager !!!!!!!!!!
-            sendAll("Accept@" + curR + "@" + valueToDecide + "@" + strconv.Itoa(slot))
+            sendAll("Accept@" + curR + "@" + slotsManager.GetValueToDecide(slot) + "@" + strconv.Itoa(slot))
         }
     }
+}
+func waitForValue(slot int) {
+	if slotsManager.GetMaxRoundInPromises(slot) == 0 {
+		preValue := <-valueChan
+		str := strings.Split(preValue, "@")
+	    valueToDecide = str[1]
+		slotsManager.SetValueToDecide(slot, valueToDecide)
+		fmt.Println("Value to decide received :", valueToDecide, "in slot", res[4])
+	} else {
+		slotsManager.SetValueToDecide(slot,slotsManager.GetFromPromiseMap(slot, slotsManager.GetMaxRoundInPromises(slot)))
+	}
 }
 func sendAll(message string) {
     for pr := range process {

@@ -8,6 +8,7 @@ type mapValueType struct {
     roundNumber, lastVotedRN int //
     lastVotedVal             string
     valueLearned             string
+	valueToDecide			 string
     cptPromise               int
     maxRoundInPromises       int
     promiseMap               map[int]string
@@ -35,6 +36,9 @@ func GetValueLearned(slot int) string {
     }
     return slotMap[slot].valueLearned
 }
+func GetValueToDecide (slot int) string {
+	return slotMap[slot].valueToDecide
+}
 func GetCptPromise(slot int) int {
     return slotMap[slot].cptPromise
 }
@@ -56,6 +60,10 @@ func SetLastVotedRN(slot int, val int) {
 func SetLastVotedVal(slot int, val string) {
     slotType := slotMap[slot]
     slotType.lastVotedVal = val
+}
+func SetValueToDecide (slot int, val string){
+	slotType := slotMap[slot]
+	slotType.valueToDecide = val
 }
 func SetValueToLearn(slot int, val string) int {
     slotType := slotMap[slot]
