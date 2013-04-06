@@ -1,7 +1,7 @@
 package slotsManager
 import (
     "fmt"
-"strconv"
+//"strconv"
 )
 // the type of the values inside the map
 type MapValueType struct {
@@ -181,7 +181,7 @@ func GetAvailableSlots() []int {
     }
     return res
 }
-func HasLearned(slot int) {
+func HasLearned(slot int) bool {
 	res := false
 	if slotMap[slot].ValueLearned!="" {
 		res = true

@@ -99,7 +99,7 @@ func waitForValue(slot int) {
 			    valueToDecide := str[1]
 				slotsManager.SetValueToDecide(slot, valueToDecide)
 				fmt.Println("Value to decide received :", valueToDecide, "in slot", strconv.Itoa(slot))
-			case default:
+			default:
 				if slotsManager.HasLearned(slot) {
 					break
 				}
