@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"time"
 )
 
 func main() {
@@ -46,7 +45,6 @@ func main() {
 				mess = "Value@" + strconv.Itoa(i)
 			}
 			connector.Send(mess, pr, nil)
-			time.Sleep(100*time.Millisecond)
 		}
 =======
 		connector.Send(mess, pr, nil)
