@@ -5,7 +5,7 @@ import (
     "paxos/slotsManager"
     "strconv"
     "strings"
-    "time"
+    //"time"
 )
 // global variables
 var (
