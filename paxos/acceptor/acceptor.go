@@ -12,8 +12,8 @@ import (
 // global variables : 
 var (
 	learnList    []int  // list of known learners
-	inPrepChan   = make(chan string, 5) // chan for reception of prepare 
-	inAcceptChan = make(chan string, 5) // chan for reception of accept 
+	inPrepChan   = make(chan string, 50) // chan for reception of prepare 
+	inAcceptChan = make(chan string, 50) // chan for reception of accept 
 )
 
 // functions :

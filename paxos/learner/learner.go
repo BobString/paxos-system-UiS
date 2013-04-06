@@ -10,7 +10,7 @@ import (
 )
 // global variables
 var (
-    learnChan = make(chan string, 5) // the channel of reception
+    learnChan = make(chan string, 50) // the channel of reception
     slotChan  chan int
     //learnedValue Pair // the learned value
     //pairMap = make(map[Pair] int) // the map of pairs to decide the value

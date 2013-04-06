@@ -16,11 +16,11 @@ var (
     leader  int   // currentLeader
     //currentRound           int = 0 //our ID at first
     //systemRound            int = 0 // current system round number
-    handlTrustChan = make(chan int, 20) // trust receive chan
+    handlTrustChan = make(chan int, 50) // trust receive chan
     //handlSysRoundChan          = make(chan int, 20) // system round number receive chan
-    handlPromiseLeaderChan = make(chan string, 20) // promise receive chan
-    valueChan              = make(chan string, 5)  // value to decide chan
-    newSlotChan            = make(chan int, 5)
+    handlPromiseLeaderChan = make(chan string, 50) // promise receive chan
+    valueChan              = make(chan string, 50)  // value to decide chan
+    newSlotChan            = make(chan int, 50)
 	debug chan int
     //maxRound               int = 0 //
     //cptProm             	  int = 0
