@@ -61,24 +61,23 @@ func prepareHandler(prepare string) {
 }
 
 func acceptHandler(accept string) {
-	for {
-		// wait for inAcceptChan
-		s := strings.Split(accept, "@")
-		rN, _ := strconv.Atoi(s[1]) // get the int value for the if
-		val := s[2] // the value
-		slot, _ := strconv.Atoi(s[3]) // the slot number (instance of paxos)
-		lvrn := slotsManager.GetLastVotedRN(slot)
-		if rN >= lvrn {
-			learn := "Learn@" + s[1] + "@" + s[2] + "@" + s[3]
-			//lvrn = rN
-			slotsManager.SetLastVotedRN(slot,rN)
-			//sendRoundChan <- lvrn
-			slotsManager.SetLastVotedVal(slot,val)
-			for i := range learnList {
-				preSend(learn, learnList[i])
-			}
+	// wait for inAcceptChan
+	s := strings.Split(accept, "@")
+	rN, _ := strconv.Atoi(s[1]) // get the int value for the if
+	val := s[2] // the value
+	slot, _ := strconv.Atoi(s[3]) // the slot number (instance of paxos)
+	lvrn := slotsManager.GetLastVotedRN(slot)
+	if rN >= lvrn {
+		learn := "Learn@" + s[1] + "@" + s[2] + "@" + s[3]
+		//lvrn = rN
+		slotsManager.SetLastVotedRN(slot,rN)
+		//sendRoundChan <- lvrn
+		slotsManager.SetLastVotedVal(slot,val)
+		for i := range learnList {
+			preSend(learn, learnList[i])
 		}
 	}
+	
 }
 
 func preSend(message string, pr int) {
