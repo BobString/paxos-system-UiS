@@ -47,7 +47,7 @@ func readyListener () {
 
 func prepareHandler(prepare string) {
 		// wait for inPrepChan
-		println("################### PREPARE HANDLER", prepare)
+		//println("################### PREPARE HANDLER", prepare)
 		s := strings.Split(prepare, "@")
 		prepRN, _ := strconv.Atoi(s[1]) // get the int value for the if
 		prepSender, _ := strconv.Atoi(s[3]) // get the int value for the preSend func
