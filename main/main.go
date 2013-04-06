@@ -111,7 +111,7 @@ func handleClient(conn net.Conn) {
 		}
 		stringaux := res[1]
 		if !strings.Contains(res[0],"Heartbeat"){
-			println("["+time.Now().String()+"]", "RECEIVED: ", res[0])
+			//println("["+time.Now().String()+"]", "RECEIVED: ", res[0])
 		}
 		//println(" from ", i)
 		switch res[0] {

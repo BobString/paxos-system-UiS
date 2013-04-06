@@ -62,14 +62,14 @@ func auxiliar() {
 				if countLeader == 2 {
 					//We are a stable leader
 					handlTrustChan <- ownProcess
-					println("["+time.Now().String()+"]","We are the leader !!")
+					//println("["+time.Now().String()+"]","We are the leader !!")
 					countLeader = countLeader + 1
 				}
 			} else {
 				countLeader = 0
 			}
 		}
-		println("Leader: ", leader)
+		//println("Leader: ", leader)
 	}
 }
 
@@ -86,7 +86,7 @@ func trustLeader(pr int) {
 		}
 	case pr < leader:
 		leader = pr
-		println("LEADER ELECTION: Accepting leader ", pr)
+		//println("LEADER ELECTION: Accepting leader ", pr)
 	}
 
 }
@@ -108,7 +108,7 @@ func gotSuspectProc(pr int) {
 	pSuspect[pr] = true
 	if pr == leader {
 		leader = ownProcess
-		println("Leader: ", leader)
+		//println("Leader: ", leader)
 		newLeaderRequest()
 	}
 }

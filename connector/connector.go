@@ -41,8 +41,8 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 			}
 		}
 		if !strings.Contains(message,"Heartbeat"){
-			print("["+time.Now().String()+"]","SEND: ", message)
-			println(" to ", pr)
+			//print("["+time.Now().String()+"]","SEND: ", message)
+			//println(" to ", pr)
 		}
 		aux := strings.Contains(message,"Prepare") || strings.Contains(message,"Promise")
 		if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || aux {

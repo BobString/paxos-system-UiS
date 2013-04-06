@@ -36,10 +36,10 @@ func EntryPoint(p []int, deb chan int) (chan int, chan string, chan string, chan
 }
 // what we do when we become the leader : change the round number
 func gotTrust(leader int) {
-	println("GOT THE TRUST !! STARTING PREPARING SLOTS")
+	//println("GOT THE TRUST !! STARTING PREPARING SLOTS")
     slots := slotsManager.GetAvailableSlots()
     for i := range slots {
-		println("PREPARING SLOT",strconv.Itoa(slots[i]))
+		//println("PREPARING SLOT",strconv.Itoa(slots[i]))
         prepareSlot(slots[i])
     }
 }
@@ -48,7 +48,7 @@ func prepareSlot(slot int) {
 	<- debug*/
     //////////////////// MESSAGE FORMT : Prepare@RN@slot
     message := "Prepare@" + strconv.Itoa(pickNext(slot)) + "@" + strconv.Itoa(slot)
-	println("PREPARE TO BE SENT :", message,"in slot",strconv.Itoa(slot))
+	//println("PREPARE TO BE SENT :", message,"in slot",strconv.Itoa(slot))
     for pr := range process {
         proc := process[pr]
         preSend(message, proc)
@@ -58,10 +58,10 @@ func prepareSlot(slot int) {
 func pickNext(slot int) int {
     currentRound := 1 + slotsManager.GetRoundNumber(slot) // TO TEST
     slotsManager.SetRoundNumber(slot, currentRound)
-	println("*************************************************************0")
+	/*println("*************************************************************0")
 	println("Slot ",strconv.Itoa(slot),":")
 	println("Round number set :", strconv.Itoa(currentRound), "and get :", strconv.Itoa(slotsManager.GetRoundNumber(slot)))
-	println("*************************************************************0")
+	println("*************************************************************0")*/
     return currentRound
 }
 // function handling the promise message
