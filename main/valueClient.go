@@ -16,6 +16,7 @@ func main() {
 		fmt.Println("2 : StopServer")
 		fmt.Println("3 : RestoreServer")
 		fmt.Println("4 : Exit program")
+		fmt.Println("5 : Debug")
 		_, err := fmt.Scanln(&menu)
 		checkErr(err)
 		valmenu,_ := strconv.Atoi(menu)
@@ -32,6 +33,8 @@ func main() {
 				mess = "RestoreServer@"
 			case 4:
 				os.Exit(0)
+			case 5:
+				mess = "Debug"
 		}
 		fmt.Println("Please select a process between 1 and 3")
 		_, err = fmt.Scanln(&pr)

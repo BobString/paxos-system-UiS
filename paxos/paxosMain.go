@@ -13,7 +13,7 @@ var (
 )
 // Initialization function
 //@parameters :
-func EntryPoint() (chan int, chan string, chan string, chan string, chan string, chan string) {
+func EntryPoint(debug chan int) (chan int, chan string, chan string, chan string, chan string, chan string) {
     pMap := connector.GetProcesses()
     var p = make([]int, len(pMap))
     i := 0
@@ -23,7 +23,7 @@ func EntryPoint() (chan int, chan string, chan string, chan string, chan string,
     }
     //
 	slotsManager.EntryPoint()
-    trustChan, promChan, valueChan, slotChan := proposer.EntryPoint(p)
+    trustChan, promChan, valueChan, slotChan := proposer.EntryPoint(p,debug)
     prepChan, acceptChan := acceptor.EntryPoint(p)
     learnChan := learner.EntryPoint(len(p), slotChan)
     return trustChan, prepChan, promChan, acceptChan, learnChan, valueChan

@@ -33,6 +33,7 @@ var (
 	learnChan                   = make(chan string, 20)
 	valueChan                   = make(chan string, 20)
 	stopChan					= make(chan bool, 5)
+	debug 						= make(chan int, 20)
 	ownProcess             int  = 0
 	stopFlag				bool = false
 )
@@ -52,7 +53,7 @@ func main() {
 		i++
 	}
 	//Call paxos and assign the channels
-	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint()
+	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(debug)
 	//Launch Leader Election	
 	handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan = leaderElection.EntryPoint(keys, handlTrustChan)
 	//Launch Failure Detector
@@ -152,6 +153,8 @@ func handleClient(conn net.Conn) {
 		case "StopServer":
 			stopFlag = true
 			connector.Stopped = true
+		case "Debug":
+			debug <- 0
 		}
 	}
 

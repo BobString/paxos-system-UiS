@@ -21,12 +21,14 @@ var (
     handlPromiseLeaderChan = make(chan string, 20) // promise receive chan
     valueChan              = make(chan string, 5)  // value to decide chan
     newSlotChan            = make(chan int, 5)
+	debug chan int
     //maxRound               int = 0 //
     //cptProm             	  int = 0
 )
 // Init function
-func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
+func EntryPoint(p []int, deb chan int) (chan int, chan string, chan string, chan int) {
     process = p
+	debug = deb
     //handlSysRoundChan = sysRoundChan
     //currentRound, _ = connector.GetOwnProcess()
     go loop()
@@ -42,6 +44,8 @@ func gotTrust(leader int) {
     }
 }
 func prepareSlot(slot int) {
+	println("WAITING FOR DEBUG#######, slot",strconv.Itoa(slot))
+	<- debug
     for pr := range process {
         proc := process[pr]
         //////////////////// MESSAGE FORMAT : Prepare@RN@slot

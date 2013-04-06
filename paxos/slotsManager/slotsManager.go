@@ -19,7 +19,8 @@ type LearnPair struct {
 }
 // the map in question
 var slotMap = make(map[int] MapValueType)
-
+var index int
+const sizeMax = 100
 
 //////////// GETTERS ////////////
 func GetRoundNumber(slot int) int {
@@ -77,10 +78,12 @@ func SetValueToLearn(slot int, val string) int {
     slotType.ValueLearned = val
 	slotMap[slot]=slotType
     // a value has been learned : we create a new entry in the map
-////////////////////////////////////////////////////// TODO : reuse slotMap (so that it doesn't exceed a certain size))
-    createNewEntry()
+    if index >= sizeMax {
+		index = index - sizeMax
+	}
+	createNewEntry()
     // and we return the value of the added slot 
-    return len(slotMap)
+    return index
 }
 func SetMaxRoundInPromises(slot, maxR int) {
     slotType := slotMap[slot]
@@ -149,13 +152,18 @@ func getSmallestUnlearned() int {
 // returns the available slots (with no learned value)
 func GetAvailableSlots() []int {
     slotMin := getSmallestUnlearned()
-    slotMax := len(slotMap)
-	length := slotMax-slotMin+1
-	index := 0
+    slotMax := index
+	length := 0
+	if slotMax < slotMin {
+		length = sizeMax-slotMin+slotMax +1
+	} else {
+		length = slotMax-slotMin+1
+	}	
+	ind := 0
 	res := make([]int,length)
-    for index < length {
-		res[index] = slotMin + index
-        index = index + 1
+    for ind < length {
+		res[ind] = slotMin + ind
+        ind = ind + 1
     }
     return res
 }
@@ -166,9 +174,11 @@ func createNewEntry() {
     promMap := make(map[int]string)
     leaMap := make(map[LearnPair]int)
     mapValueNil := MapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
-    slotMap[len(slotMap)+1] = mapValueNil
+	index = index+1
+    slotMap[index] = mapValueNil
 }
 func EntryPoint() {
+	index = 1
     for i := 0; i < 10; i++ {
         createNewEntry()
     }
