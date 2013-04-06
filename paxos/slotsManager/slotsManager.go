@@ -1,6 +1,7 @@
 package slotsManager
 import (
     "fmt"
+"strconv"
 )
 // the type of the values inside the map
 type MapValueType struct {
@@ -101,7 +102,9 @@ func IncCptProm(slot int) {
 //// Promise map
 func AddToPromiseMap(slot int, key int, val string) {
 	slotType := slotMap[slot]
-    slotType.PromiseMap[key] = val
+	auxMap := slotType.PromiseMap
+	auxMap[key] = val
+	slotType.PromiseMap = auxMap
 	slotMap[slot] = slotType
 }
 func ClearPromiseMap(slot int) {
@@ -186,6 +189,10 @@ func EntryPoint() {
     for i := 1; i < 10; i++ {
         createNewEntry()
     }
+	println("£££££££££££££££££££££")
+	for v,_ := range slotMap {
+		println("Slot number",strconv.Itoa(v))
+	}
 }
 
 

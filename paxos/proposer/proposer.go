@@ -46,11 +46,11 @@ func gotTrust(leader int) {
 func prepareSlot(slot int) {
 	println("WAITING FOR DEBUG#######, slot",strconv.Itoa(slot))
 	<- debug
+    //////////////////// MESSAGE FORMT : Prepare@RN@slot
+    message := "Prepare@" + strconv.Itoa(pickNext(slot)) + "@" + strconv.Itoa(slot)
+	println("PREPARE TO BE SENT :", message,"in slot",strconv.Itoa(slot))
     for pr := range process {
         proc := process[pr]
-        //////////////////// MESSAGE FORMAT : Prepare@RN@slot
-        message := "Prepare@" + strconv.Itoa(pickNext(slot)) + "@" + strconv.Itoa(slot)
-		println("PREPARE TO BE SENT :", message,"in slot",strconv.Itoa(slot))
         preSend(message, proc)
     }
 }
