@@ -91,7 +91,7 @@ func SetMaxRoundInPromises(slot, maxR int) {
     slotType.MaxRoundInPromises = maxR
 	slotMap[slot]=slotType
 }
-func IncCptProm(slot int) {
+func incCptProm(slot int) {
     slotType := slotMap[slot]
     slotType.CptPromise = slotType.CptPromise + 1
 	slotMap[slot]=slotType
@@ -106,6 +106,7 @@ func AddToPromiseMap(slot int, key int, val string) {
 	auxMap[key] = val
 	slotType.PromiseMap = auxMap
 	slotMap[slot] = slotType
+	incCptProm(slot)
 }
 func ClearPromiseMap(slot int) {
     var mapAux map[int]string
@@ -115,7 +116,9 @@ func ClearPromiseMap(slot int) {
 		delete(mapAux, v)
     }
 	slotType.PromiseMap = mapAux
+	slotType.CptPromise = 0
 	slotMap[slot] = slotType
+	
 }
 func GetFromPromiseMap(slot int, key int) string {
     return slotMap[slot].PromiseMap[key]
@@ -178,6 +181,13 @@ func GetAvailableSlots() []int {
     }
     return res
 }
+func HasLearned(slot int) {
+	res := false
+	if slotMap[slot].ValueLearned!="" {
+		res = true
+	}
+	return res
+}
 
 
 // adds an empty slot to the map
@@ -193,10 +203,6 @@ func EntryPoint() {
     for i := 1; i < 10; i++ {
         createNewEntry()
     }
-	println("£££££££££££££££££££££")
-	for v,_ := range slotMap {
-		println("Slot number",strconv.Itoa(v))
-	}
 }
 
 

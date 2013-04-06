@@ -71,33 +71,40 @@ func gotPromise(data string) {
     lastVotedRound, _ := strconv.Atoi(res[2])
     lastVotedValue := res[3]
     slot, _ := strconv.Atoi(res[4])
-    //slotsManager.     FIWME : change here the cptPromise ?
-    slotsManager.IncCptProm(slot)
     //processID := res[4]
     slotRN := slotsManager.GetRoundNumber(slot)
-	println("############PROMISE DECRYPTED", strconv.Itoa(roundnumber),strconv.Itoa(slotRN))
+	//println("############PROMISE DECRYPTED", strconv.Itoa(roundnumber),strconv.Itoa(slotRN))
     if roundnumber == slotRN {
-		println("$$$$$$$$ADDING TO PROMISE MAP") 
+		//println("$$$$$$$$ADDING TO PROMISE MAP") 
         slotsManager.AddToPromiseMap(slot, lastVotedRound, lastVotedValue)
         if lastVotedRound > slotsManager.GetMaxRoundInPromises(slot) {
             slotsManager.SetMaxRoundInPromises(slot, lastVotedRound)
         }
-        if slotsManager.GetCptPromise(slot) >= len(process)/2 {
-   			println("WAITING FOR VALUE ##########")         
+        if slotsManager.GetCptPromise(slot) > len(process)/2 {
+   			//println("WAITING FOR VALUE ##########")         
 			waitForValue(slot)
-			println("VALUE DECIDED !!!!!!!!!!!!!!!!!")
+			//println("VALUE DECIDED !!!!!!!!!!!!!!!!!")
+			slotsManager.ClearPromiseMap(slot)
             curR := strconv.Itoa(slotRN) //// FIXME : modify for slotsManager !!!!!!!!!!
             sendAll("Accept@" + curR + "@" + slotsManager.GetValueToDecide(slot) + "@" + strconv.Itoa(slot))
         }
     }
 }
-func waitForValue(slot int) {
+func waitForValue(slot int) {	
 	if slotsManager.GetMaxRoundInPromises(slot) == 0 {
-		preValue := <-valueChan
-		str := strings.Split(preValue, "@")
-	    valueToDecide := str[1]
-		slotsManager.SetValueToDecide(slot, valueToDecide)
-		fmt.Println("Value to decide received :", valueToDecide, "in slot", strconv.Itoa(slot))
+		for {
+			select{
+			case preValue := <-valueChan :
+				str := strings.Split(preValue, "@")
+			    valueToDecide := str[1]
+				slotsManager.SetValueToDecide(slot, valueToDecide)
+				fmt.Println("Value to decide received :", valueToDecide, "in slot", strconv.Itoa(slot))
+			case default:
+				if slotsManager.HasLearned(slot) {
+					break
+				}
+			}
+		}
 	} else {
 		slotsManager.SetValueToDecide(slot,slotsManager.GetFromPromiseMap(slot, slotsManager.GetMaxRoundInPromises(slot)))
 	}
