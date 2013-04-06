@@ -4,7 +4,6 @@ import (
 )
 // the type of the values inside the map
 type MapValueType struct {
-    // !!!!!!!!!!!!!!!!!!!!! TODO : do not forget ine the go files to call the values with slosManager.Get...(slot)
     RoundNumber, LastVotedRN int //
     LastVotedVal             string
     ValueLearned             string
@@ -20,6 +19,8 @@ type LearnPair struct {
 }
 // the map in question
 var slotMap = make(map[int] MapValueType)
+
+
 //////////// GETTERS ////////////
 func GetRoundNumber(slot int) int {
     return slotMap[slot].RoundNumber
@@ -48,6 +49,8 @@ func GetMaxRoundInPromises(slot int) int {
 func GetValueFromLearnPair(p LearnPair) string {
     return p.Val
 }
+
+
 //////////// SETTERS ////////////
 func SetRoundNumber(slot int, val int) {
     slotType := slotMap[slot]
@@ -74,8 +77,9 @@ func SetValueToLearn(slot int, val string) int {
     slotType.ValueLearned = val
 	slotMap[slot]=slotType
     // a value has been learned : we create a new entry in the map
+////////////////////////////////////////////////////// TODO : reuse slotMap (so that it doesn't exceed a certain size))
     createNewEntry()
-    // and we return the value of the added slot (TODO : to be sent to the proposer for a Prepare message sending)
+    // and we return the value of the added slot 
     return len(slotMap)
 }
 func SetMaxRoundInPromises(slot, maxR int) {
@@ -88,6 +92,8 @@ func IncCptProm(slot int) {
     slotType.CptPromise = slotType.CptPromise + 1
 	slotMap[slot]=slotType
 }
+
+
 /////// FUNCTIONS ON MAPS ///////
 //// Promise map
 func AddToPromiseMap(slot int, key int, val string) {
@@ -96,9 +102,14 @@ func AddToPromiseMap(slot int, key int, val string) {
 	slotMap[slot] = slotType
 }
 func ClearPromiseMap(slot int) {
-    for v, _ := range slotMap[slot].PromiseMap {
-        delete(slotMap[slot].PromiseMap, v)
+    var mapAux map[int]string
+	slotType := slotMap[slot]
+	mapAux = slotType.PromiseMap
+    for v, _ := range mapAux {
+		delete(mapAux, v)
     }
+	slotType.PromiseMap = mapAux
+	slotMap[slot] = slotType
 }
 func GetFromPromiseMap(slot int, key int) string {
     return slotMap[slot].PromiseMap[key]
@@ -108,10 +119,16 @@ func AddToLearnMap(slot int, key LearnPair, val int) {
     slotMap[slot].LearnMap[key] = val
 }
 func ClearLearnMap(slot int) {
-    for v, _ := range slotMap[slot].LearnMap {
-        delete(slotMap[slot].LearnMap, v)
+	var mapAux map[LearnPair]int
+	slotType := slotMap[slot]
+	mapAux = slotType.LearnMap
+    for v, _ := range mapAux {
+		delete(mapAux, v)
     }
+	slotType.LearnMap = mapAux
+	slotMap[slot] = slotType
 }
+
 func GetFromLearnMap(slot int, key LearnPair) int {
     return slotMap[slot].LearnMap[key]
 }
@@ -119,6 +136,8 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
     _, ok := slotMap[slot].LearnMap[key]
     return ok
 }
+
+
 // returns the smallest slot with no learned value yet
 func getSmallestUnlearned() int {
     i := 1
@@ -140,6 +159,8 @@ func GetAvailableSlots() []int {
     }
     return res
 }
+
+
 // adds an empty slot to the map
 func createNewEntry() {
     promMap := make(map[int]string)
