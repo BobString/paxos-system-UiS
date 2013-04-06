@@ -10,18 +10,18 @@ import (
 
 func main() {
 	var val,menu,mess string
-	var pr,number int
+	var pr int
 	for {
 		fmt.Println("Choose what you want to send")
 		fmt.Println("1 : Value")
 		fmt.Println("2 : StopServer")
 		fmt.Println("3 : RestoreServer")
 		fmt.Println("4 : Exit program")
-		fmt.Println("5 : 500 values")
+		fmt.Println("5 : Debug")
 		_, err := fmt.Scanln(&menu)
 		checkErr(err)
 		valmenu,_ := strconv.Atoi(menu)
-		number = 1
+
 		switch valmenu {
 			case 1:
 				fmt.Println("Enter the value to send")
@@ -35,12 +35,12 @@ func main() {
 			case 4:
 				os.Exit(0)
 			case 5:
-				mess = "Value@"
-				number = 500
+				mess = "Debug"
 		}
 		fmt.Println("Please select a process between 1 and 3")
 		_, err = fmt.Scanln(&pr)
 		checkErr(err)
+<<<<<<< HEAD
 		for i:=1;i<=number;i++ {
 			if number>1 {
 				mess = "Value@" + strconv.Itoa(i)
@@ -48,6 +48,9 @@ func main() {
 			connector.Send(mess, pr, nil)
 			time.Sleep(100*time.Millisecond)
 		}
+=======
+		connector.Send(mess, pr, nil)
+>>>>>>> parent of ecc1489... Deleted most prints, added test func
 	}
 }
 
