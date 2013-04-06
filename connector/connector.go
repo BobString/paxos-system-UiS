@@ -31,12 +31,12 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 			service := process[pr]
 			tcpAddr, err := net.ResolveTCPAddr("tcp", service)
 			if err != nil {
-				println("Error resolving the TCP addrs")
+				//println("Error resolving the TCP addrs")
 				return nil, err
 			}
 			connect, err = net.DialTCP("tcp", nil, tcpAddr)
 			if err != nil {
-				println("Error dialing the TCP addrs")
+				//println("Error dialing the TCP addrs")
 				return nil, err
 			}
 		}
@@ -49,7 +49,7 @@ func Send(message string, pr int, connect *net.TCPConn) (*net.TCPConn, error) {
 			ownProcess, _ := GetOwnProcess()
 			_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 			if err != nil {
-				println("Error dialing the TCP addrs")
+				//println("Error dialing the TCP addrs")
 				return nil, err
 			}
 			return connect, err

@@ -42,7 +42,7 @@ func main() {
 		checkErr(err)
 		for i:=1;i<=number;i++ {
 			if number>1 {
-				mess = mess + strconv.Itoa(i)
+				mess = "Value@" + strconv.Itoa(i)
 			}
 			connector.Send(mess, pr, nil)
 		}

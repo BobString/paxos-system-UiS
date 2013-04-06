@@ -19,9 +19,9 @@ type LearnPair struct {
     Val string
 }
 // the map in question
-var slotMap = make(map[int] MapValueType)
 var index int
 const sizeMax = 100
+var slotMap = make(map[int] MapValueType,sizeMax)
 
 //////////// GETTERS ////////////
 func GetRoundNumber(slot int) int {
