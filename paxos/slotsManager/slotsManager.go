@@ -151,6 +151,7 @@ func getSmallestUnlearned() int {
 }
 // returns the available slots (with no learned value)
 func GetAvailableSlots() []int {
+	// verified
     slotMin := getSmallestUnlearned()
     slotMax := index
 	length := 0
@@ -162,8 +163,8 @@ func GetAvailableSlots() []int {
 	ind := 0
 	res := make([]int,length)
     for i:=0;i<length;i++ {
-		if slotMin+ind>100 {
-			ind = ind - 100
+		if slotMin+ind>sizeMax {
+			ind = ind - sizeMax
 		}
 		res[i] = slotMin + ind
         ind = ind + 1
