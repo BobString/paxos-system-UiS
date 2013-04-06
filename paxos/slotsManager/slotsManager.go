@@ -161,8 +161,11 @@ func GetAvailableSlots() []int {
 	}	
 	ind := 0
 	res := make([]int,length)
-    for ind < length {
-		res[ind] = slotMin + ind
+    for i:=0;i<length;i++ {
+		if slotMin+ind>100 {
+			ind = ind - 100
+		}
+		res[i] = slotMin + ind
         ind = ind + 1
     }
     return res
@@ -179,7 +182,7 @@ func createNewEntry() {
 }
 func EntryPoint() {
 	index = 1
-    for i := 0; i < 10; i++ {
+    for i := 1; i < 10; i++ {
         createNewEntry()
     }
 }
