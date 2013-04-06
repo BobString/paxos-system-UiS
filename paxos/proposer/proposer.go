@@ -121,7 +121,9 @@ func loop() {
         case data := <-handlPromiseLeaderChan:
             gotPromise(data)
         case newSlot := <-newSlotChan:
-            prepareSlot(newSlot)
+			if isLeader() {
+	            prepareSlot(newSlot)
+			}										
         }
     }
 }
