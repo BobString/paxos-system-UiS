@@ -40,7 +40,7 @@ func main() {
 		fmt.Println("Please select a process between 1 and 3")
 		_, err = fmt.Scanln(&pr)
 		checkErr(err)
-		for i=1;i<=number;i++ {
+		for i:=1;i<=number;i++ {
 			if number>1 {
 				mess = mess + strconv.Itoa(i)
 			}
