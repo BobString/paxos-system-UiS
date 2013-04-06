@@ -81,6 +81,9 @@ func SetValueToLearn(slot int, val string) int {
     // a value has been learned : we create a new entry in the map
     if index >= sizeMax {
 		index = index - sizeMax
+		ClearPromiseMap(slot)
+		ClearLearnMap(slot)
+		delete(slotMap,index+1)
 	}
 	createNewEntry()
     // and we return the value of the added slot 
