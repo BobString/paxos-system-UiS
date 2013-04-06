@@ -88,11 +88,10 @@ func handleClient(conn net.Conn) {
 	for {
 		//leader := leaderElection.GetLeader()
 		//println("MAIN LEADER: ", leader)
-		buf := make([]byte, 512)
+		buf := make([]byte, 4096)
 		_, err := conn.Read(buf)
 		if err != nil {
 			conn.Close()
-			println(err.Error())
 			//If the client close the connection we get out and start listening again
 			break
 		}
