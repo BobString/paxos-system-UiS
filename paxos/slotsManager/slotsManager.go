@@ -122,7 +122,11 @@ func GetFromPromiseMap(slot int, key int) string {
 }
 //// Learn map
 func AddToLearnMap(slot int, key LearnPair, val int) {
-    slotMap[slot].LearnMap[key] = val
+    slotType := slotMap[slot]
+	auxMap := slotType.LearnMap
+	auxMap[key] = val
+	slotType.LearnMap = auxMap
+	slotMap[slot] = slotType
 }
 func ClearLearnMap(slot int) {
 	var mapAux map[LearnPair]int
@@ -185,7 +189,7 @@ func createNewEntry() {
     slotMap[index] = mapValueNil
 }
 func EntryPoint() {
-	index = 1
+	index = 0
     for i := 1; i < 10; i++ {
         createNewEntry()
     }
