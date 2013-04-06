@@ -92,12 +92,12 @@ func gotPromise(data string) {
 }
 func waitForValue(slot int) {	
 	if slotsManager.GetMaxRoundInPromises(slot) == 0 {
-		preValue := <-valueChan :
+		preValue := <-valueChan 
 		str := strings.Split(preValue, "@")
 	    valueToDecide := str[1]
 		slotsManager.SetValueToDecide(slot, valueToDecide)
 		fmt.Println("Value to decide received :", valueToDecide, "in slot", strconv.Itoa(slot))
-		}
+		
 	} else {
 		slotsManager.SetValueToDecide(slot,slotsManager.GetFromPromiseMap(slot, slotsManager.GetMaxRoundInPromises(slot)))
 	}
