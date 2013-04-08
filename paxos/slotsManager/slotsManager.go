@@ -81,7 +81,7 @@ func SetValueToLearn(slot int, val string) int {
 	ClearPromiseMap(slot)
 	ClearLearnMap(slot)
     // a value has been learned : we create a new entry in the map
-	initSlot(index+1)
+	initSlot()
     // and we return the value of the added slot 
     return index
 }
@@ -188,14 +188,15 @@ func HasLearned(slot int) bool {
 	return res
 }
 
-func initSlot (slot int) {
+func initSlot () {
+	index = index +1
 	if index > sizeMax {
 		index = index - sizeMax
 	}	
-	if _,ok := slotMap[slot];ok {	
-		ClearPromiseMap(slot)
-		ClearLearnMap(slot)
-		slotType := slotMap[slot]
+	if _,ok := slotMap[index];ok {	
+		ClearPromiseMap(index)
+		ClearLearnMap(index)
+		slotType := slotMap[index]
 		slotType.RoundNumber = 0
 		slotType.LastVotedRN = 0
 		slotType.LastVotedVal = ""
@@ -203,21 +204,21 @@ func initSlot (slot int) {
 		slotType.ValueToDecide = ""
 		slotType.CptPromise = 0
 		slotType.MaxRoundInPromises = 0	
-		slotMap[slot] = slotType
+		slotMap[index] = slotType
 	} else {
 		promMap := make(map[int]string)
    		leaMap := make(map[LearnPair]int)
    		mapValueNil := MapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
-		slotMap[slot] = mapValueNil
+		slotMap[index] = mapValueNil
 	}	
 }
 func EntryPoint() {
 	index = 0
 	slotMap = make(map[int] MapValueType,sizeMax)
     for i := 1; i <= sizeMax; i++ {
-        initSlot(i)
+        initSlot()
     }
-	index = 4
+	index = 4 // so we have 3 slots prepared ahead of the one currently used
 }
 
 
