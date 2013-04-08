@@ -21,7 +21,7 @@ type LearnPair struct {
 // the map in question
 var index int
 const sizeMax = 100
-var slotMap = make(map[int] MapValueType,sizeMax)
+var slotMap map[int] MapValueType
 
 //////////// GETTERS ////////////
 func GetRoundNumber(slot int) int {
@@ -78,14 +78,10 @@ func SetValueToLearn(slot int, val string) int {
     slotType := slotMap[slot]
     slotType.ValueLearned = val
 	slotMap[slot]=slotType
+	ClearPromiseMap(slot)
+	ClearLearnMap(slot)
     // a value has been learned : we create a new entry in the map
-    if index >= sizeMax {
-		index = index - sizeMax
-		ClearPromiseMap(slot)
-		ClearLearnMap(slot)
-		delete(slotMap,index+1)
-	}
-	createNewEntry()
+	initSlot(index+1)
     // and we return the value of the added slot 
     return index
 }
@@ -192,20 +188,36 @@ func HasLearned(slot int) bool {
 	return res
 }
 
-
-// adds an empty slot to the map
-func createNewEntry() {
-    promMap := make(map[int]string)
-    leaMap := make(map[LearnPair]int)
-    mapValueNil := MapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
-	index = index+1
-    slotMap[index] = mapValueNil
+func initSlot (slot int) {
+	if index > sizeMax {
+		index = index - sizeMax
+	}	
+	if _,ok := slotMap(slot);ok {	
+		ClearPromiseMap(slot)
+		ClearLearnMap(slot)
+		slotType := slotMap(slot)
+		slotType.RoundNumber = 0
+		slotType.LastVotedRN = 0
+		slotType.LastVotedVal = ""
+		slotType.ValueLearned = ""
+		slotType.ValueToDecide = ""
+		slotType.CptPromise = 0
+		slotType.MaxRoundInPromises = 0	
+		slotMap[slot] = slotType
+	} else {
+		promMap := make(map[int]string)
+   		leaMap := make(map[LearnPair]int)
+   		mapValueNil := MapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
+		slotMap(slot) = mapValueNil
+	}	
 }
-func EntryPoint() {
+func EntryPoint() {}
 	index = 0
-    for i := 1; i < 10; i++ {
-        createNewEntry()
+	slotMap = make(map[int] MapValueType,sizeMax)
+    for i := 1; i <= sizeMax; i++ {
+        initSlot(i)
     }
+	index = 4
 }
 
 
