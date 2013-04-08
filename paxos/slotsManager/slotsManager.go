@@ -192,10 +192,10 @@ func initSlot (slot int) {
 	if index > sizeMax {
 		index = index - sizeMax
 	}	
-	if _,ok := slotMap(slot);ok {	
+	if _,ok := slotMap[slot];ok {	
 		ClearPromiseMap(slot)
 		ClearLearnMap(slot)
-		slotType := slotMap(slot)
+		slotType := slotMap[slot]
 		slotType.RoundNumber = 0
 		slotType.LastVotedRN = 0
 		slotType.LastVotedVal = ""
