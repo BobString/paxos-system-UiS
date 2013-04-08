@@ -152,7 +152,10 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
 
 // returns the smallest slot with no learned value yet
 func getSmallestUnlearned() int {
-    i := 1
+    i := index - 3
+	if i<1 {
+		i + 100
+	}
     for slotMap[i].ValueLearned != "" {
         i = i + 1
     }
@@ -193,7 +196,8 @@ func initSlot () {
 	if index > sizeMax {
 		index = index - sizeMax
 	}	
-	if _,ok := slotMap[index];ok {	
+	_,ok := slotMap[index]
+	if ok {	
 		ClearPromiseMap(index)
 		ClearLearnMap(index)
 		slotType := slotMap[index]
