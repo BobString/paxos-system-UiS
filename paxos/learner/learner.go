@@ -8,18 +8,14 @@ import (
     "time"
 	//"connector"
 )
+
 // global variables
 var (
     learnChan = make(chan string, 50) // the channel of reception
     slotChan  chan int
-    //learnedValue Pair // the learned value
-    //pairMap = make(map[Pair] int) // the map of pairs to decide the value
     nbProc int // the number of precesses, to determine if a quorum has sent Learn
 )
-/*type Pair struct {
-    Nv int
-    Val string
-}*/
+
 // Init function
 func EntryPoint(count int, newSlotChan chan int) chan string {
     nbProc = count
@@ -27,12 +23,11 @@ func EntryPoint(count int, newSlotChan chan int) chan string {
     go learnListener()
     return learnChan
 }
+
 func clearMap(slot int) {
-    /*for v := range pairMap {
-        delete(pairMap,v)
-    }*/
     slotsManager.ClearLearnMap(slot)
 }
+
 func learnListener () {
 	for {
 		learn := <-learnChan 
@@ -49,19 +44,14 @@ func learnHandler(learn string) {
     // if the pair is in the map, we increase the count by 1, otherwise we put 1
     if ok {
  	   slotsManager.AddToLearnMap(slot, p, slotsManager.GetFromLearnMap(slot, p)+1)
-	    //pairMap[p] = pairMap[p]+1
     } else {
 		 slotsManager.AddToLearnMap(slot, p, 1)
-		//pairMap[p] = 1
 	}
     // we then check if the a quorum of acceptors has sent the same Learn message
     if v := slotsManager.GetFromLearnMap(slot, p); v > (nbProc / 2) {
         nextSlot := slotsManager.SetValueToLearn(slot, p.Val)
-        //learnedValue = p
-        //TODO : send to the proposer nextSlot, so he can send prepare !!!!!
         slotChan <- nextSlot
         println("["+time.Now().String()+"]", "NEW VALUE LEARNED :", p.Val, "in slot", res[3])
-        clearMap(slot)
 	}
 }
 

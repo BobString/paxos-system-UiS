@@ -1,17 +1,17 @@
 package slotsManager
 import (
     "fmt"
-//"strconv"
+	//"strconv"
 )
 // the type of the values inside the map
 type MapValueType struct {
-    RoundNumber, LastVotedRN int //
-    LastVotedVal             string
-    ValueLearned             string
-	ValueToDecide			 string
-    CptPromise               int
-    MaxRoundInPromises       int
-    PromiseMap               map[int]string
+    RoundNumber, LastVotedRN int // round numbers (current and last voted)
+    LastVotedVal             string // the last voted value
+    ValueLearned             string // the learned value
+	ValueToDecide			 string // the value to be decided
+    CptPromise               int // the promise counter
+    MaxRoundInPromises       int // the maximum round retrieved from the promises
+    PromiseMap               map[int]string // the map of promises to check for last voted values
     LearnMap                 map[LearnPair]int // the map of pairs to decide the value
 }
 type LearnPair struct {
@@ -80,7 +80,7 @@ func SetValueToLearn(slot int, val string) int {
 	slotMap[slot]=slotType
 	ClearPromiseMap(slot)
 	ClearLearnMap(slot)
-    // a value has been learned : we create a new entry in the map
+    // a value has been learned : we re initialise an entry in the map
 	initSlot()
     // and we return the value of the added slot 
     return index
@@ -90,6 +90,7 @@ func SetMaxRoundInPromises(slot, maxR int) {
     slotType.MaxRoundInPromises = maxR
 	slotMap[slot]=slotType
 }
+// a local function to increase the counter of promises
 func incCptProm(slot int) {
     slotType := slotMap[slot]
     slotType.CptPromise = slotType.CptPromise + 1
@@ -98,7 +99,8 @@ func incCptProm(slot int) {
 
 
 /////// FUNCTIONS ON MAPS ///////
-//// Promise map
+//// PROMISE MAP
+// to add to the map
 func AddToPromiseMap(slot int, key int, val string) {
 	slotType := slotMap[slot]
 	auxMap := slotType.PromiseMap
@@ -107,6 +109,7 @@ func AddToPromiseMap(slot int, key int, val string) {
 	slotMap[slot] = slotType
 	incCptProm(slot)
 }
+// to clear the map
 func ClearPromiseMap(slot int) {
     var mapAux map[int]string
 	slotType := slotMap[slot]
@@ -119,10 +122,12 @@ func ClearPromiseMap(slot int) {
 	slotMap[slot] = slotType
 	
 }
+// to get an element from the map 
 func GetFromPromiseMap(slot int, key int) string {
     return slotMap[slot].PromiseMap[key]
 }
-//// Learn map
+//// LEARN MAP
+// to add to the map
 func AddToLearnMap(slot int, key LearnPair, val int) {
     slotType := slotMap[slot]
 	auxMap := slotType.LearnMap
@@ -130,6 +135,7 @@ func AddToLearnMap(slot int, key LearnPair, val int) {
 	slotType.LearnMap = auxMap
 	slotMap[slot] = slotType
 }
+// To clear the map
 func ClearLearnMap(slot int) {
 	var mapAux map[LearnPair]int
 	slotType := slotMap[slot]
@@ -140,10 +146,11 @@ func ClearLearnMap(slot int) {
 	slotType.LearnMap = mapAux
 	slotMap[slot] = slotType
 }
-
+// a getter for the map elements
 func GetFromLearnMap(slot int, key LearnPair) int {
     return slotMap[slot].LearnMap[key]
 }
+// A classic belongsTo function
 func BelongsToLearnMap(slot int, key LearnPair) bool {
     _, ok := slotMap[slot].LearnMap[key]
     return ok
@@ -154,18 +161,38 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
 func getSmallestUnlearned() int {
     i := index - 3
 	if i<1 {
-		i + 100
+		i = i + 100
 	}
     for slotMap[i].ValueLearned != "" {
         i = i + 1
     }
     return i
 }
-// returns the available slots (with no learned value)
+// returns the biggest slot number greater with no learned value
+func getBiggestUnlearned() int {
+	i := getSmallestUnlearned()
+	stop = i
+	for slotMap[i].ValueLearned == "" {
+        i = i + 1
+		if i>sizeMax {
+			i = 1
+		}
+		if i == stop {
+			if i!=1 {
+				i = i-1
+			} else {
+				i = sizeMax
+			}			
+			break
+		}
+    }
+	return i
+}
+// returns the available slots (with no learned value) as a slice of int
 func GetAvailableSlots() []int {
 	// verified
     slotMin := getSmallestUnlearned()
-    slotMax := index
+    slotMax := getBiggestUnlearned()
 	length := 0
 	if slotMax < slotMin {
 		length = sizeMax-slotMin+slotMax +1
@@ -182,13 +209,6 @@ func GetAvailableSlots() []int {
         ind = ind + 1
     }
     return res
-}
-func HasLearned(slot int) bool {
-	res := false
-	if slotMap[slot].ValueLearned!="" {
-		res = true
-	}
-	return res
 }
 
 func initSlot () {

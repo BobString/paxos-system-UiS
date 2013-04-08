@@ -47,7 +47,6 @@ func readyListener () {
 
 func prepareHandler(prepare string) {
 		// wait for inPrepChan
-		//println("################### PREPARE HANDLER", prepare)
 		s := strings.Split(prepare, "@")
 		prepRN, _ := strconv.Atoi(s[1]) // get the int value for the if
 		prepSender, _ := strconv.Atoi(s[3]) // get the int value for the preSend func
@@ -69,9 +68,7 @@ func acceptHandler(accept string) {
 	lvrn := slotsManager.GetLastVotedRN(slot)
 	if rN >= lvrn {
 		learn := "Learn@" + s[1] + "@" + s[2] + "@" + s[3]
-		//lvrn = rN
 		slotsManager.SetLastVotedRN(slot,rN)
-		//sendRoundChan <- lvrn
 		slotsManager.SetLastVotedVal(slot,val)
 		for i := range learnList {
 			preSend(learn, learnList[i])
