@@ -211,7 +211,7 @@ func initSlot (slot int) {
 		slotMap(slot) = mapValueNil
 	}	
 }
-func EntryPoint() {}
+func EntryPoint() {
 	index = 0
 	slotMap = make(map[int] MapValueType,sizeMax)
     for i := 1; i <= sizeMax; i++ {
