@@ -208,7 +208,7 @@ func initSlot (slot int) {
 		promMap := make(map[int]string)
    		leaMap := make(map[LearnPair]int)
    		mapValueNil := MapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
-		slotMap(slot) = mapValueNil
+		slotMap[slot] = mapValueNil
 	}	
 }
 func EntryPoint() {
