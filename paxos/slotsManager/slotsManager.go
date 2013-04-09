@@ -179,7 +179,7 @@ func getSmallestUnused() int {
 }
 // returns the biggest slot number greater with no learned value
 func getBiggestUnused() int {
-	i := getSmallestUnlearned()
+	i := getSmallestUnused()
 	stop := i
 	for !IsInWork(i+1) {
         i = i + 1
@@ -200,8 +200,8 @@ func getBiggestUnused() int {
 // returns the available slots (with no learned value) as a slice of int
 func GetAvailableSlots() []int {
 	// verified
-    slotMin := getSmallestUnlearned()
-    slotMax := getBiggestUnlearned()
+    slotMin := getSmallestUnused()
+    slotMax := getBiggestUnused()
 	length := 0
 	if slotMax < slotMin {
 		length = sizeMax-slotMin+slotMax +1
@@ -242,7 +242,7 @@ func initSlot () {
 	} else {
 		promMap := make(map[int]string)
    		leaMap := make(map[LearnPair]int)
-   		mapValueNil := MapValueType{0, 0, "", "", "", 0, 0, promMap, leaMap}
+   		mapValueNil := MapValueType{0, 0, "", "", "", 0, 0,false, promMap, leaMap}
 		slotMap[index] = mapValueNil
 	}	
 }
