@@ -119,14 +119,14 @@ func preSend(message string, pr int) {
 	if message == "Suspect" || message == "Restore" {
 		//If is Suspect or Restore we are going to send the message to ourself to our leader election 
 		aux := message + "@" + strconv.Itoa(pr)
-		connector.Send(aux, ownProcess, nil)
+		connector.Send(aux, ownProcess)
 
 	} else if message == "HeartbeatReply" || message == "HeartbeatRequest" {
 
 		if pr == ownProcess {
 			return
 		}
-		_, err := connector.Send(message, pr, nil)
+		_, err := connector.Send(message, pr)
 		if err != nil {
 			pSuspect[pr] = true
 			preSend("Suspect", pr)

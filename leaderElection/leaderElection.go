@@ -117,7 +117,7 @@ func gotProcRecov(pr int) {
 }
 
 func preSend(message string, pr int) {
-	_, err := connector.Send(message, pr, nil)
+	_, err := connector.Send(message, pr)
 	if err != nil {
 		gotSuspectProc(pr)
 	} else {

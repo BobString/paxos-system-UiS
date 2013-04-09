@@ -148,7 +148,7 @@ func handleClient(conn net.Conn) {
 			if lead == ownProcess {
 				valueChan <- string1
 			} else {
-				connector.Send(string1, lead, nil)
+				connector.Send(string1, lead)
 			}
 		case "StopServer":
 			stopFlag = true

@@ -78,5 +78,5 @@ func acceptHandler(accept string) {
 }
 
 func preSend(message string, pr int) {
-	connector.Send(message, pr, nil)
+	connector.Send(message, pr)
 }

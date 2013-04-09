@@ -45,7 +45,7 @@ func main() {
 			if number>1 {
 				mess = "Value@" + strconv.Itoa(i)
 			}
-			connector.Send(mess, pr, nil)
+			connector.Send(mess, pr)
 			// a small time to let the paxos machine decide values and not slow the network down
 			time.Sleep(100*time.Millisecond)
 		}

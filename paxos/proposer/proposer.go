@@ -108,6 +108,6 @@ func loop() {
     }
 }
 func preSend(message string, pr int) {
-    connector.Send(message, pr, nil)
+    connector.Send(message, pr)
 }
 
