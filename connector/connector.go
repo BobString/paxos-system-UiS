@@ -32,7 +32,7 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 	err = nil
 	connect = nil
 	if !Stopped {
-		if connect == nil {
+		//if connect == nil {
 			if _,ok := connMap[pr]; ok {
 				connect = connMap[pr]
 			} else {
@@ -49,7 +49,7 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 					return nil, err
 				}
 			}
-		}
+		//}
 		aux := strings.Contains(message,"Prepare") || strings.Contains(message,"Promise")
 		if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || aux {
 			ownProcess, _ := GetOwnProcess()
@@ -58,7 +58,8 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 				//println("Error dialing the TCP addrs")
 				return nil, err
 			}
-		} else {
+			
+		} else{
 			_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
 			checkError(err)
 		}

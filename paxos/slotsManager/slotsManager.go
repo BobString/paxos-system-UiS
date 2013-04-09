@@ -11,6 +11,7 @@ type MapValueType struct {
 	ValueToDecide			 string // the value to be decided
     CptPromise               int // the promise counter
     MaxRoundInPromises       int // the maximum round retrieved from the promises
+	InWork					 bool
     PromiseMap               map[int]string // the map of promises to check for last voted values
     LearnMap                 map[LearnPair]int // the map of pairs to decide the value
 }
@@ -51,6 +52,9 @@ func GetMaxRoundInPromises(slot int) int {
 func GetValueFromLearnPair(p LearnPair) string {
     return p.Val
 }
+func IsInWork (slot int) bool {
+	return slotMap[slot].InWork
+}
 
 
 //////////// SETTERS ////////////
@@ -88,6 +92,11 @@ func SetValueToLearn(slot int, val string) int {
 func SetMaxRoundInPromises(slot, maxR int) {
     slotType := slotMap[slot]
     slotType.MaxRoundInPromises = maxR
+	slotMap[slot]=slotType
+}
+func SetInWork (slot int, val bool) {
+	slotType := slotMap[slot]
+    slotType.InWork = val
 	slotMap[slot]=slotType
 }
 // a local function to increase the counter of promises
@@ -158,25 +167,22 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
 
 
 // returns the smallest slot with no learned value yet
-func getSmallestUnlearned() int {
+func getSmallestUnused() int {
     i := index - 3
 	if i<1 {
 		i = i + 100
 	}
-    for slotMap[i].ValueLearned != "" {
+    for !IsInWork(i) {
         i = i + 1
     }
     return i
 }
 // returns the biggest slot number greater with no learned value
-func getBiggestUnlearned() int {
+func getBiggestUnused() int {
 	i := getSmallestUnlearned()
 	stop := i
-	for slotMap[i].ValueLearned == "" {
+	for !IsInWork(i+1) {
         i = i + 1
-		if i>sizeMax {
-			i = 1
-		}
 		if i == stop {
 			if i!=1 {
 				i = i-1
@@ -184,6 +190,9 @@ func getBiggestUnlearned() int {
 				i = sizeMax
 			}			
 			break
+		}
+		if i>=sizeMax {
+			i = 0
 		}
     }
 	return i
@@ -228,6 +237,7 @@ func initSlot () {
 		slotType.ValueToDecide = ""
 		slotType.CptPromise = 0
 		slotType.MaxRoundInPromises = 0	
+		slotType.InWork = false
 		slotMap[index] = slotType
 	} else {
 		promMap := make(map[int]string)
@@ -237,12 +247,11 @@ func initSlot () {
 	}	
 }
 func EntryPoint() {
-	index = 0
+	index = 4// so we have 3 slots prepared ahead of the one currently used
 	slotMap = make(map[int] MapValueType,sizeMax)
     for i := 1; i <= sizeMax; i++ {
         initSlot()
     }
-	index = 4 // so we have 3 slots prepared ahead of the one currently used
 }
 
 
