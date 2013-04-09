@@ -33,35 +33,26 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 	connect = nil
 	if !Stopped {
 		//if connect == nil {
-			if connect,ok := connMap[pr]; ok {
-				
-			} else {
-				service := process[pr]
-				tcpAddr, err := net.ResolveTCPAddr("tcp", service)
-				if err != nil {
-					//println("Error resolving the TCP addrs")
-					return nil, err
-				}
-				connect, err = net.DialTCP("tcp", nil, tcpAddr)
-				//connMap[pr] = connect
-				if err != nil {
-					//println("Error dialing the TCP addrs")
-					return nil, err
-				}
+		if connect,ok := connMap[pr]; !ok {
+			service := process[pr]
+			tcpAddr, err := net.ResolveTCPAddr("tcp", service)
+			if err != nil {
+				//println("Error resolving the TCP addrs")
+				return nil, err
 			}
-		//}
-		aux := strings.Contains(message,"Prepare") || strings.Contains(message,"Promise")
-		if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || aux {
-			ownProcess, _ := GetOwnProcess()
-			_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
+			connect, err = net.DialTCP("tcp", nil, tcpAddr)
+			connMap[pr] = connect
 			if err != nil {
 				//println("Error dialing the TCP addrs")
 				return nil, err
 			}
-			
-		} else{
-			_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
-			checkError(err)
+		}
+	//}
+		ownProcess, _ := GetOwnProcess()
+		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
+		if err != nil {
+			//println("Error dialing the TCP addrs")
+			return nil, err
 		}
 	//connect.Close()
 	}

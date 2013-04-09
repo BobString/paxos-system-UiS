@@ -61,11 +61,13 @@ func timeout(ticker *time.Ticker) bool {
 		}
 		if !pAlive[pr] {
 			pSuspect[pr] = true
-			preSend("Suspect", pr)
+			mess := "Suspect@" + strconv(pr)
+			preSend(mess, pr)
 
 		} else if pSuspect[pr] {
 			pSuspect[pr] = false
-			preSend("Restore", pr)
+			mess := "Restore@" + strconv(pr)
+			preSend(mess, pr)
 		}
 
 		//Sent HeartbeatRequest to process
