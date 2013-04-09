@@ -23,7 +23,7 @@ var (
 	ownProcess int    = 0
 	ownIP      string = ""
 	Stopped bool = false
-	connMap = map[int] *net.TCPConn
+	connMap = make (map[int] *net.TCPConn)
 )
 
 func Send(message string, pr int) (*net.TCPConn, error) {
@@ -50,18 +50,19 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 				}
 			}
 		}
-		ownProcess, _ := GetOwnProcess()
-		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
-		/*if err != nil {
-			//println("Error dialing the TCP addrs")
-			return nil, err
+		aux := strings.Contains(message,"Prepare") || strings.Contains(message,"Promise")
+		if message == "HeartbeatRequest" || message == "HeartbeatReply" || message == "LeaderRequest" || aux {
+			ownProcess, _ := GetOwnProcess()
+			_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
+			if err != nil {
+				//println("Error dialing the TCP addrs")
+				return nil, err
+			}
+		} else {
+			_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
+			checkError(err)
 		}
-		return connect, err*/
-		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
-		checkError(err)
-	} /*else {
-		err := nil
-	}	*/
+	}
 	return connect, err
 }
 
@@ -112,7 +113,7 @@ func getLocalIp() string {
 
 func checkError(err error) {
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Fatal error ", err.Error())
+		fmt.Fprintf(os.Stderr, "Fatal error connector ", err.Error())
 		os.Exit(1)
 	}
 }
