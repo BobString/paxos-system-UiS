@@ -91,7 +91,7 @@ func handleClient(conn net.Conn) {
 		buf := make([]byte, 4096)
 		_, err := conn.Read(buf)
 		if err != nil {
-			//conn.Close()
+			conn.Close()
 			//If the client close the connection we get out and start listening again
 			break
 		}

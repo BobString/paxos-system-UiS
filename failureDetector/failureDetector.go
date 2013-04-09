@@ -61,12 +61,12 @@ func timeout(ticker *time.Ticker) bool {
 		}
 		if !pAlive[pr] {
 			pSuspect[pr] = true
-			mess := "Suspect@" + strconv(pr)
+			mess := "Suspect@" + strconv.Itoa(pr)
 			preSend(mess, pr)
 
 		} else if pSuspect[pr] {
 			pSuspect[pr] = false
-			mess := "Restore@" + strconv(pr)
+			mess := "Restore@" + strconv.Itoa(pr)
 			preSend(mess, pr)
 		}
 
