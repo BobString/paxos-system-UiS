@@ -7,6 +7,7 @@ import (
     "paxos/slotsManager"
     "strconv"
     "strings"
+	"math"
     //"time"
 )
 // global variables
@@ -106,9 +107,9 @@ func loop() {
         case newSlot := <-newSlotChan:
 			if isLeader() {
 	            prepareSlot(newSlot)
-	            prepareSlot(mod(newSlot+1,100))
-	            prepareSlot(mod(newSlot+2,100))
-	            prepareSlot(mod(newSlot+3,100))										
+	            prepareSlot(math.Mod(newSlot+1,100))
+	            prepareSlot(math.Mod(newSlot+2,100))
+	            prepareSlot(math.Mod(newSlot+3,100))										
 			}										
         }
     }
