@@ -171,7 +171,7 @@ func getSmallestUnlearned() int {
 // returns the biggest slot number greater with no learned value
 func getBiggestUnlearned() int {
 	i := getSmallestUnlearned()
-	stop = i
+	stop := i
 	for slotMap[i].ValueLearned == "" {
         i = i + 1
 		if i>sizeMax {
