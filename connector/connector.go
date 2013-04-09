@@ -43,7 +43,7 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 					return nil, err
 				}
 				connect, err = net.DialTCP("tcp", nil, tcpAddr)
-				connMap[pr] = connect
+				//connMap[pr] = connect
 				if err != nil {
 					//println("Error dialing the TCP addrs")
 					return nil, err

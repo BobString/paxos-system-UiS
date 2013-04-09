@@ -168,12 +168,12 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
 
 // returns the smallest slot with no learned value yet
 func getSmallestUnused() int {
-    i := index - 3
-	if i<1 {
-		i = i + 100
-	}
-    for !IsInWork(i) {
+    i := index 	
+    for IsInWork(i) {
         i = i + 1
+		if i>sizeMax {
+			break
+		}
     }
     return i
 }
@@ -247,7 +247,7 @@ func initSlot () {
 	}	
 }
 func EntryPoint() {
-	index = 4// so we have 3 slots prepared ahead of the one currently used
+	index = 1// so we have 3 slots prepared ahead of the one currently used
 	slotMap = make(map[int] MapValueType,sizeMax)
     for i := 1; i <= sizeMax; i++ {
         initSlot()
