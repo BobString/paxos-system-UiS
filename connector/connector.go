@@ -33,8 +33,8 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 	connect = nil
 	if !Stopped {
 		//if connect == nil {
-			if _,ok := connMap[pr]; ok {
-				connect = connMap[pr]
+			if connect,ok := connMap[pr]; ok {
+				
 			} else {
 				service := process[pr]
 				tcpAddr, err := net.ResolveTCPAddr("tcp", service)
@@ -63,6 +63,7 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 			_, err := connect.Write([]byte(message + "@" + strconv.Itoa(pr) + "@"))
 			checkError(err)
 		}
+	//connect.Close()
 	}
 	return connect, err
 }
