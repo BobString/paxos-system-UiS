@@ -79,11 +79,11 @@ func SetValueToDecide (slot int, val string){
 	slotMap[slot]=slotType
 }
 func SetValueToLearn(slot int, val string) int {
+	ClearLearnMap(slot)
     slotType := slotMap[slot]
     slotType.ValueLearned = val
 	slotMap[slot]=slotType
 	ClearPromiseMap(slot)
-	ClearLearnMap(slot)
     // a value has been learned : we re initialise an entry in the map
 	initSlot()
     // and we return the value of the added slot 
@@ -247,11 +247,12 @@ func initSlot () {
 	}	
 }
 func EntryPoint() {
-	index = 1// so we have 3 slots prepared ahead of the one currently used
+	index = 1
 	slotMap = make(map[int] MapValueType,sizeMax)
     for i := 1; i <= sizeMax; i++ {
         initSlot()
     }
+	index = 3
 }
 
 

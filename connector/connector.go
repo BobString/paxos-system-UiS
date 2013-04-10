@@ -48,7 +48,10 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 		} else {
 			connect = connMap[pr]
 		}
-		ownProcess, _ := GetOwnProcess()
+		ownProcess := 0
+		if !strings.Contains(message,"Value") {
+			ownProcess, _ := GetOwnProcess()
+		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {
 			delete(connMap,pr)
