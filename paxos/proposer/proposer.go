@@ -34,7 +34,7 @@ func gotTrust(leader int) {
 		if !slotsManager.IsInWork(i) {
 			slotsManager.SetInWork(i,true)
 			prepareSlot(slots[i])
-			time.Sleep(time.Millisecond)
+			time.Sleep(10*time.Millisecond)
 		}
     }
 }
