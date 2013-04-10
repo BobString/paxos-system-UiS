@@ -87,7 +87,11 @@ func SetValueToLearn(slot int, val string) int {
     // a value has been learned : we re initialise an entry in the map
 	initSlot()
     // and we return the value of the added slot 
-    return index
+	nextSlot := index - 3
+	if nextSlot < 1 {
+		nextSlot = nextSlot + sizeMax
+	}
+    return nextSlot
 }
 func SetMaxRoundInPromises(slot, maxR int) {
     slotType := slotMap[slot]
