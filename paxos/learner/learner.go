@@ -14,12 +14,14 @@ var (
     learnChan = make(chan string, 50) // the channel of reception
     slotChan  chan int
     nbProc int // the number of precesses, to determine if a quorum has sent Learn
+	toAccManager chan string
 )
 
 // Init function
-func EntryPoint(count int, newSlotChan chan int) chan string {
+func EntryPoint(count int, newSlotChan chan int, toAccountManager chan string) chan string {
     nbProc = count
     slotChan = newSlotChan
+	toAccManager = toAccountManager
     go learnListener()
     return learnChan
 }
@@ -51,6 +53,7 @@ func learnHandler(learn string) {
     if v := slotsManager.GetFromLearnMap(slot, p); v > (nbProc / 2) {
         nextSlot := slotsManager.SetValueToLearn(slot, p.Val)
         slotChan <- nextSlot
+		toAccManager <- p.Val
         println("["+time.Now().String()+"]", "NEW VALUE LEARNED :", p.Val, "in slot", res[3])
 	}
 }

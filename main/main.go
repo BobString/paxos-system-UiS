@@ -33,7 +33,8 @@ var (
 	learnChan                   = make(chan string, 50)
 	valueChan                   = make(chan string, 50)
 	stopChan					= make(chan bool, 50)
-	debug 						= make(chan int, 50)
+	learnerToAccountManager chan string
+	//debug 						= make(chan int, 50)
 	ownProcess             int  = 0
 	stopFlag				bool = false
 )
@@ -52,8 +53,10 @@ func main() {
 		keys[i] = k
 		i++
 	}
+	//Launch Account Manager
+	learnerToAccountManager = accountManager.EntryPoint()
 	//Call paxos and assign the channels
-	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(debug)
+	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(learnerToAccountManager)
 	//Launch Leader Election	
 	handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan = leaderElection.EntryPoint(keys, handlTrustChan)
 	//Launch Failure Detector
@@ -145,7 +148,7 @@ func handleClient(conn net.Conn) {
 			learnChan <- string1
 		case "Value":
 			lead := leaderElection.GetLeader()
-			string1 = string1 +"@"+conn.RemoteAddr().String()
+			string1 = string1 +","+conn.RemoteAddr().String()
 			if lead == ownProcess {
 				valueChan <- string1
 			} else {

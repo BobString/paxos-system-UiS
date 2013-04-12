@@ -17,13 +17,13 @@ var (
     handlPromiseLeaderChan = make(chan string, 50) // promise receive chan
     valueChan              = make(chan string, 50)  // value to decide chan
     newSlotChan            = make(chan int, 50)
-	debug chan int
+	//debug chan int
 )
 
 // Init function
-func EntryPoint(p []int, deb chan int) (chan int, chan string, chan string, chan int) {
+func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
     process = p
-	debug = deb
+	//debug = deb
     go loop()
     return handlTrustChan, handlPromiseLeaderChan, valueChan, newSlotChan
 }
