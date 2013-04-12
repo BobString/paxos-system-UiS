@@ -36,13 +36,11 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 			service := process[pr]
 			tcpAddr, err := net.ResolveTCPAddr("tcp", service)
 			if err != nil {
-				//println("Error resolving the TCP addrs")
 				return nil, err
 			}
 			connect, err = net.DialTCP("tcp", nil, tcpAddr)
 			connMap[pr] = connect
 			if err != nil {
-				//println("Error dialing the TCP addrs")
 				return nil, err
 			}
 		} else {
@@ -58,10 +56,43 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 			//println("Error dialing the TCP addrs")
 			return nil, err
 		}
-	//connect.Close()
 	}
 	return connect, err
 }
+
+func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
+	var err error
+	var connect *net.TCPConn
+	err = nil
+	connect = nil
+	if !Stopped {
+		if _,ok := connMap[pr]; !ok {
+			tcpAddr, err := net.ResolveTCPAddr("tcp", remAddr)
+			if err != nil {
+				return nil, err
+			}
+			connect, err = net.DialTCP("tcp", nil, tcpAddr)
+			connMap[pr] = connect
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			connect = connMap[pr]
+		}
+		ownProcess := 0
+		if !strings.Contains(message,"Value") {
+			ownProcess, _ = GetOwnProcess()
+		}
+		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
+		if err != nil {
+			delete(connMap,pr)
+			//println("Error dialing the TCP addrs")
+			return nil, err
+		}
+	}
+	return connect, err
+}
+
 
 func GetProcesses() map[int]string {
 	return process
