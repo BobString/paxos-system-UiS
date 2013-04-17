@@ -50,7 +50,7 @@ func balance(account string, client string) {
 	accountNum, _ := strconv.Atoi(account)
 	if _, exists := accounts[accountNum]; exists {
 		res := accounts[accountNum]
-		message = "Account number "+ account+ " has "+ strconv.Itoa(res)+ " credits"]
+		message = "Account number "+ account+ " has "+ strconv.Itoa(res)+ " credits"
 		//Send message to the client with the answer
 	} else {
 		message = "Sorry the asked account ("+account+") does not exist. Please check the account number"
@@ -69,7 +69,7 @@ func withdraw(account string, amount string, client string) {
 		} else {
 			accounts[accountNum] = res - amountNum
 			//Send message to the client with the new ammotun
-			message = amount+" credits have been withdrawn successfully from account "account+"."
+			message = amount+" credits have been withdrawn successfully from account "+account+"."
 		}
 
 	} else {
