@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	//"time"
+	"accountManager"
 )
 
 const (
@@ -54,7 +55,7 @@ func main() {
 		i++
 	}
 	//Launch Account Manager
-	//learnerToAccountManager = accountManager.EntryPoint()
+	learnerToAccountManager = accountManager.EntryPoint()
 	//Call paxos and assign the channels
 	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(learnerToAccountManager)
 	//Launch Leader Election	

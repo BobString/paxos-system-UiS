@@ -6,7 +6,7 @@ var (
 )
 
 func EntryPoint() chan string {
-
+	go loop()
 	return actionsChan
 }
 
