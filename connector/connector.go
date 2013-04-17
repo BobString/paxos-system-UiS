@@ -66,29 +66,26 @@ func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
 	err = nil
 	connect = nil
 	if !Stopped {
-		if _,ok := connMap[pr]; !ok {
-			tcpAddr, err := net.ResolveTCPAddr("tcp", remAddr)
-			if err != nil {
-				return nil, err
-			}
-			connect, err = net.DialTCP("tcp", nil, tcpAddr)
-			connMap[pr] = connect
-			if err != nil {
-				return nil, err
-			}
-		} else {
-			connect = connMap[pr]
+		tcpAddr, err := net.ResolveTCPAddr("tcp", remAddr)
+		if err != nil {
+			return nil, err
+		}
+		connect, err = net.DialTCP("tcp", nil, tcpAddr)
+		if err != nil {
+			return nil, err
 		}
 		ownProcess := 0
 		if !strings.Contains(message,"Value") {
 			ownProcess, _ = GetOwnProcess()
+		} else {
+			message = message + connect.LocalAddr().String() + ","
 		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {
-			delete(connMap,pr)
 			//println("Error dialing the TCP addrs")
 			return nil, err
 		}
+		connect.Close()
 	}
 	return connect, err
 }

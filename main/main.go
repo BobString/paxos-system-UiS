@@ -33,7 +33,7 @@ var (
 	learnChan                   = make(chan string, 50)
 	valueChan                   = make(chan string, 50)
 	stopChan					= make(chan bool, 50)
-	learnerToAccountManager chan string
+	learnerToAccountManager = make(chan bool, 50)
 	//debug 						= make(chan int, 50)
 	ownProcess             int  = 0
 	stopFlag				bool = false
@@ -54,7 +54,7 @@ func main() {
 		i++
 	}
 	//Launch Account Manager
-	learnerToAccountManager = accountManager.EntryPoint()
+	//learnerToAccountManager = accountManager.EntryPoint()
 	//Call paxos and assign the channels
 	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(learnerToAccountManager)
 	//Launch Leader Election	

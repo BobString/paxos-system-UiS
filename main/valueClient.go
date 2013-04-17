@@ -3,6 +3,7 @@ package main
 import (
 	"connector"
 	"fmt"
+	"net"
 	"os"
 	"time"
 	"strconv"
@@ -11,6 +12,7 @@ import (
 func main() {
 	var val,menu,mess string
 	var pr,number int
+	go createServer()
 	for {
 		fmt.Println("Choose what you want to send")
 		fmt.Println("1 : Deposit")
@@ -32,7 +34,7 @@ func main() {
 				checkErr(err)
 				mess = "Value@" + "Deposit,"+ val + ","
 				fmt.Println("Enter the amount to deposit")
-				_, err := fmt.Scanln(&val)
+				_, err = fmt.Scanln(&val)
 				checkErr(err)	
 				mess = mess + val + ","
 			case 2:
@@ -41,7 +43,7 @@ func main() {
 				checkErr(err)
 				mess = "Value@" + "Withdraw,"+ val + ","
 				fmt.Println("Enter the amount to withdraw")
-				_, err := fmt.Scanln(&val)
+				_, err = fmt.Scanln(&val)
 				checkErr(err)	
 				mess = mess + val + ","
 			case 3:
@@ -50,11 +52,11 @@ func main() {
 				checkErr(err)
 				mess = "Value@" + "Transfer,"+ val + ","
 				fmt.Println("Please enter the account number of destination")
-				_, err := fmt.Scanln(&val)
+				_, err = fmt.Scanln(&val)
 				checkErr(err)
 				mess = mess + val + ","
 				fmt.Println("Enter the amount to transfer")
-				_, err := fmt.Scanln(&val)
+				_, err = fmt.Scanln(&val)
 				checkErr(err)
 				mess = mess + val + ","
 			case 4:
@@ -78,6 +80,38 @@ func main() {
 			//time.Sleep(100*time.Millisecond)
 		//}
 	}
+}
+
+func createServer() {
+	fmt.Println("Starting server...")
+	service := ":1200"
+	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
+	checkError(err)
+	listener, err := net.ListenTCP("tcp", tcpAddr)
+	checkError(err)
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			conn.Close()
+			continue
+		}
+
+		//Maintaining the connection per node
+		go handleClient(conn)
+
+	}
+
+}
+
+func handleClient(conn *net.Conn) {
+	buf := make([]byte, 4096)
+	_, err := conn.Read(buf)
+	if err != nil {
+		conn.Close()
+		//If the client close the connection we get out and start listening again
+		break
+	}
+	println(string(buf))
 }
 
 func checkErr (err error) {
