@@ -1,5 +1,11 @@
 package accountManager
 
+import (
+	"strings"
+	"fmt"
+	"strconv"
+)
+
 var (
 	accounts    = make(map[int]int)
 	actionsChan = make(chan string, 20)
@@ -22,15 +28,17 @@ func loop() {
 }
 
 func manageMessage(action string) {
+	res := string.Split(action,"@")
+	string1 := res[1]
 	res = strings.Split(string1, ",")
 	select {
-	case res[0] == "balance":
+	case res[0] == "Balance":
 		balance(res[1], res[2])
-	case res[0] == "withdraw":
+	case res[0] == "Withdraw":
 		withdraw(res[1], res[2], res[3])
-	case res[0] == "deposit":
+	case res[0] == "Deposit":
 		deposit(res[1], res[2], res[3])
-	case res[0] == "transfer":
+	case res[0] == "Transfer":
 		transfer(res[1], res[2], res[3], res[4])
 	}
 

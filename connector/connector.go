@@ -80,7 +80,7 @@ func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
 		} else {
 			message = message + connect.LocalAddr().String() + ","
 		}
-		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
+		_, err = connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {
 			//println("Error dialing the TCP addrs")
 			return nil, err
