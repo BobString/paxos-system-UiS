@@ -4,8 +4,8 @@ import (
 	"connector"
 	"fmt"
 	"net"
-	"os"
-	"time"
+	//"os"
+	//"time"
 	"strconv"
 )
 
@@ -86,9 +86,9 @@ func createServer() {
 	fmt.Println("Starting server...")
 	service := ":1200"
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
-	checkError(err)
+	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
-	checkError(err)
+	checkErr(err)
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -103,7 +103,7 @@ func createServer() {
 
 }
 
-func handleClient(conn *net.Conn) {
+func handleClient(conn net.Conn) {
 	buf := make([]byte, 4096)
 	_, err := conn.Read(buf)
 	if err != nil {
