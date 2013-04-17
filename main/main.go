@@ -34,7 +34,7 @@ var (
 	learnChan                   = make(chan string, 50)
 	valueChan                   = make(chan string, 50)
 	stopChan					= make(chan bool, 50)
-	learnerToAccountManager = make(chan bool, 50)
+	learnerToAccountManager = make(chan string, 50)
 	//debug 						= make(chan int, 50)
 	ownProcess             int  = 0
 	stopFlag				bool = false
@@ -158,8 +158,8 @@ func handleClient(conn net.Conn) {
 		case "StopServer":
 			stopFlag = true
 			connector.Stopped = true
-		case "Debug":
-			debug <- 0
+		//case "Debug":
+			//debug <- 0
 		}
 	}
 
