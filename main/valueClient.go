@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var val,menu,mess string
-	var pr,number int
+	var pr/*,number*/ int
 	go createServer()
 	for {
 		fmt.Println("Choose what you want to send")
@@ -104,6 +104,7 @@ func createServer() {
 }
 
 func handleClient(conn net.Conn) {
+	for {
 	buf := make([]byte, 4096)
 	_, err := conn.Read(buf)
 	if err != nil {
@@ -112,6 +113,7 @@ func handleClient(conn net.Conn) {
 		break
 	}
 	println(string(buf))
+	}
 }
 
 func checkErr (err error) {
