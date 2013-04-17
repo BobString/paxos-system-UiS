@@ -49,6 +49,9 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 		ownProcess := 0
 		if !strings.Contains(message,"Value") {
 			ownProcess, _ = GetOwnProcess()
+		} else {
+			//println(connect.LocalAddr().String())
+			message = message + connect.LocalAddr().String() + ","
 		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {
@@ -77,10 +80,7 @@ func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
 		ownProcess := 0
 		if !strings.Contains(message,"Value") {
 			ownProcess, _ = GetOwnProcess()
-		} else {
-			println(connect.LocalAddr().String())
-			message = message + connect.LocalAddr().String() + ","
-		}
+		} 
 		_, err = connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {
 			//println("Error dialing the TCP addrs")

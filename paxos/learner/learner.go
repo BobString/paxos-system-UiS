@@ -53,8 +53,8 @@ func learnHandler(learn string) {
     if v := slotsManager.GetFromLearnMap(slot, p); v > (nbProc / 2) {
         nextSlot := slotsManager.SetValueToLearn(slot, p.Val)
         slotChan <- nextSlot
-		toAccManager <- p.Val
         println("["+time.Now().String()+"]", "NEW VALUE LEARNED :", p.Val, "in slot", res[3])
+		toAccManager <- p.Val
 	}
 }
 

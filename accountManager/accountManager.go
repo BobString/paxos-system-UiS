@@ -20,12 +20,8 @@ func EntryPoint() chan string {
 
 func loop() {
 	for {
-		select {
-
-		case action := <-actionsChan:
-			manageMessage(action)
-		}
-
+		action := <-actionsChan:
+		manageMessage(action)
 	}
 }
 
