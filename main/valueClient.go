@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var val,menu,mess string
-	var pr/*,number*/ int
+	var pr int
 	go createServer()
 	for {
 		fmt.Println("Choose what you want to send")
@@ -26,7 +26,6 @@ func main() {
 		_, err := fmt.Scanln(&menu)
 		checkErr(err)
 		valmenu,_ := strconv.Atoi(menu)
-		number = 1
 		switch valmenu {
 			case 1:
 				fmt.Println("Please enter the account number (D)")
