@@ -51,6 +51,9 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 			ownProcess, _ = GetOwnProcess()
 		} else {
 			//println(connect.LocalAddr().String())
+			addr := connect.LocalAddr().String()
+			aux := strings.Split(addr,":")
+			addr = aux[0]+":1201"
 			message = message + connect.LocalAddr().String() + ","
 		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))

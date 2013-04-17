@@ -20,15 +20,13 @@ func EntryPoint() chan string {
 
 func loop() {
 	for {
-		action := <-actionsChan:
+		action := <-actionsChan
 		manageMessage(action)
 	}
 }
 
 func manageMessage(action string) {
-	res := strings.Split(action,"@")
-	string1 := res[1]
-	res = strings.Split(string1, ",")
+	res := strings.Split(action, ",")
 	switch res[0] {
 	case "Balance":
 		balance(res[1], res[2])
@@ -88,6 +86,7 @@ func deposit(account string, amount string, client string) {
 		//Send message to the client saying that the account is created with the money
 		message = "The account did not exist. It has been created with the following amount : "+amount +" credits. If there is any complaint, please ask our support service"
 	}
+	sendToClient(message,client)
 }
 func transfer(accFrom string, accTo string, amount string, client string) {
 	accountNumTo, _ := strconv.Atoi(accTo)
@@ -113,6 +112,7 @@ func transfer(accFrom string, accTo string, amount string, client string) {
 		//Send message to the client saying that that account doesn't exist
 		message = "Transfer error : one of the accounts does not exist"
 	}
+	sendToClient(message,client)
 }
 
 

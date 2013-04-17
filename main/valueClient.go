@@ -79,7 +79,7 @@ func main() {
 
 func createServer() {
 	fmt.Println("Starting server...")
-	service := ":1200"
+	service := ":1201"
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
