@@ -2,7 +2,7 @@ package accountManager
 
 import (
 	"strings"
-	"fmt"
+	//"fmt"
 	"strconv"
 )
 
@@ -28,17 +28,17 @@ func loop() {
 }
 
 func manageMessage(action string) {
-	res := string.Split(action,"@")
+	res := strings.Split(action,"@")
 	string1 := res[1]
 	res = strings.Split(string1, ",")
-	select {
-	case res[0] == "Balance":
+	switch res[0] {
+	case "Balance":
 		balance(res[1], res[2])
-	case res[0] == "Withdraw":
+	case "Withdraw":
 		withdraw(res[1], res[2], res[3])
-	case res[0] == "Deposit":
+	case "Deposit":
 		deposit(res[1], res[2], res[3])
-	case res[0] == "Transfer":
+	case "Transfer":
 		transfer(res[1], res[2], res[3], res[4])
 	}
 
