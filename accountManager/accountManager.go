@@ -50,10 +50,10 @@ func balance(account string, client string) {
 	accountNum, _ := strconv.Atoi(account)
 	if _, exists := accounts[accountNum]; exists {
 		res := accounts[accountNum]
-		message = "Account number", account, "has ", strconv.Itoa(res), "credits"
+		message = ["Account number", account, "has ", strconv.Itoa(res), "credits"]
 		//Send message to the client with the answer
 	} else {
-		message = "Sorry the asked account ("+account+") does not exist. Please check the account number"
+		message = ["Sorry the asked account ("+account+") does not exist. Please check the account number"]
 		//Send message to the client saying that that account doesn't exist
 	}
 	sendToClient(message,client)
@@ -65,16 +65,16 @@ func withdraw(account string, amount string, client string) {
 		res := accounts[accountNum]
 		if amountNum > res {
 			//Asking more money than available, send ERROR
-			message = "Error : The account number",account,"does not have enough money to withdraw the required amount ("+amount+")"
+			message = ["Error : The account number",account,"does not have enough money to withdraw the required amount ("+amount+")"]
 		} else {
 			accounts[accountNum] = res - amountNum
 			//Send message to the client with the new ammotun
-			message = amount,"credits have been withdrawn successfully."
+			message = [amount,"credits have been withdrawn successfully from account",account,"."]
 		}
 
 	} else {
 		//Send message to the client saying that that account doesn't exist
-		message = "Sorry the asked account ("+account+") does not exist. Please check the account number"
+		message = ["Sorry the asked account ("+account+") does not exist. Please check the account number"]
 	}
 	sendToClient(message,client)
 }
@@ -85,12 +85,12 @@ func deposit(account string, amount string, client string) {
 		res := accounts[accountNum]
 		accounts[accountNum] = res + amountNum
 		//Send message to the client with the new ammotun
-		message = amount,"credits have been added to the account", account+". The new balance is",strconv.Itoa(accounts[accountNum])
+		message = [amount,"credits have been added to the account", account+". The new balance is",strconv.Itoa(accounts[accountNum])]
 
 	} else {
 		accounts[accountNum] = amountNum
 		//Send message to the client saying that the account is created with the money
-		message = "The account did not exist. It has been created with the following amount :",amount,"credits. If there is any complaint, please ask our support service"
+		message = ["The account did not exist. It has been created with the following amount :",amount,"credits. If there is any complaint, please ask our support service"]
 	}
 }
 func transfer(accFrom string, accTo string, amount string, client string) {
@@ -109,7 +109,7 @@ func transfer(accFrom string, accTo string, amount string, client string) {
 			accounts[accountNumFrom] = resFrom - amountNum
 			accounts[accountNumTo] = resTo + amountNum
 			//Send message to the client with the new ammotun
-			message = "Transfer successful : account",accFrom," has now",strconv.Itoa(accounts[accountNumFrom]),"credits and account", accTo, "has",strconv.Itoa(accounts[accountNumTo]),"credits."
+			message = ["Transfer successful : account",accFrom," has now",strconv.Itoa(accounts[accountNumFrom]),"credits and account", accTo, "has",strconv.Itoa(accounts[accountNumTo]),"credits."]
 		}
 		//Send message to the client with the new ammotun
 
@@ -121,5 +121,5 @@ func transfer(accFrom string, accTo string, amount string, client string) {
 
 
 func sendToClient(message string, client string){
-	connector.SendByAddr(message,string)
+	connector.SendByAddr(message,client)
 }
