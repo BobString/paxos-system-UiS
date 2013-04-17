@@ -70,11 +70,7 @@ func main() {
 		fmt.Println("Please select a process between 1 and 3")
 		_, err = fmt.Scanln(&pr)
 		checkErr(err)
-		/*for i:=1;i<=number;i++ {
-			if number>1 {
-				mess = "Value@" + strconv.Itoa(i)
-			}*/
-			connector.Send(mess, pr)
+		connector.Send(mess, pr)
 			// a small time to let the paxos machine decide values and not slow the network down
 			//time.Sleep(100*time.Millisecond)
 		//}

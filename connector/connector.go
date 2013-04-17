@@ -78,6 +78,7 @@ func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
 		if !strings.Contains(message,"Value") {
 			ownProcess, _ = GetOwnProcess()
 		} else {
+			println(connect.LocalAddr().String())
 			message = message + connect.LocalAddr().String() + ","
 		}
 		_, err = connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
