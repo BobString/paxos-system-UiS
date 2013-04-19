@@ -31,8 +31,8 @@ func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
 func gotTrust(leader int) {
    slots := slotsManager.GetAvailableSlots()
     for i := range slots {
-		if !slotsManager.IsInWork(i) {
-			slotsManager.SetInWork(i,true)
+		if slotsManager.GetValueLearned(i)=="" {
+			//slotsManager.SetInWork(i,true)
 			prepareSlot(slots[i])
 			time.Sleep(10*time.Millisecond)
 		}
