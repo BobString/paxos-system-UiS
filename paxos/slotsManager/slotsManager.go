@@ -169,11 +169,11 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
     return ok
 }
 
-/*
+
 // returns the smallest slot with no learned value yet
 func getSmallestUnused() int {
     i := index 	
-    for IsInWork(i) {
+    for GetValueLearned(i)=="" {
         i = i + 1
 		if i>sizeMax {
 			break
@@ -185,7 +185,7 @@ func getSmallestUnused() int {
 func getBiggestUnused() int {
 	i := getSmallestUnused()
 	stop := i
-	for !IsInWork(i+1) {
+	for !(GetValueLearned(i+1)=="") {
         i = i + 1
 		if i == stop {
 			if i!=1 {
@@ -200,11 +200,11 @@ func getBiggestUnused() int {
 		}
     }
 	return i
-}*/
+}
 // returns the available slots (with no learned value) as a slice of int
-func GetAvailableSlots() map[int	]int {
+func GetAvailableSlots() []int {
 	// verified
-   /* slotMin := getSmallestUnused()
+    slotMin := getSmallestUnused()
     slotMax := getBiggestUnused()
 	length := 0
 	if slotMax < slotMin {
@@ -220,7 +220,7 @@ func GetAvailableSlots() map[int	]int {
 		}
 		res[i] = slotMin + ind
         ind = ind + 1
-    }*/
+    }/*
 	res := make(map[int]int)
 	ind := 0
 	for i:=1; i<=sizeMax ; i++ {
@@ -228,7 +228,7 @@ func GetAvailableSlots() map[int	]int {
 			res[ind] = i
 			ind = ind +1
 		}
-	}
+	}*/
     return res
 }
 
