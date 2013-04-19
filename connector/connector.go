@@ -15,8 +15,8 @@ var (
 		1: "152.94.0.120:1200", //pitter28
 		2: "152.94.0.117:1200", // pitter25
 		//2: "152.94.0.121:1200", //pitter29		
-		//2: "152.94.0.114:1200", //pitter22
-		3: "152.94.0.124:1200", //pitter32
+		3: "152.94.0.114:1200", //pitter22
+		//3: "152.94.0.124:1200", //pitter32
 		//3: "152.94.0.115:1200", //pitter23
 		
 	}
@@ -36,13 +36,11 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 			service := process[pr]
 			tcpAddr, err := net.ResolveTCPAddr("tcp", service)
 			if err != nil {
-				//println("Error resolving the TCP addrs")
 				return nil, err
 			}
 			connect, err = net.DialTCP("tcp", nil, tcpAddr)
 			connMap[pr] = connect
 			if err != nil {
-				//println("Error dialing the TCP addrs")
 				return nil, err
 			}
 		} else {
@@ -51,6 +49,12 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 		ownProcess := 0
 		if !strings.Contains(message,"Value") {
 			ownProcess, _ = GetOwnProcess()
+		} else {
+			//println(connect.LocalAddr().String())
+			addr := connect.LocalAddr().String()
+			aux := strings.Split(addr,":")
+			addr = aux[0]+":1201"
+			message = message + addr + ","
 		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {
@@ -58,10 +62,38 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 			//println("Error dialing the TCP addrs")
 			return nil, err
 		}
-	//connect.Close()
 	}
 	return connect, err
 }
+
+func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
+	var err error
+	var connect *net.TCPConn
+	err = nil
+	connect = nil
+	if !Stopped {
+		tcpAddr, err := net.ResolveTCPAddr("tcp", remAddr)
+		if err != nil {
+			return nil, err
+		}
+		connect, err = net.DialTCP("tcp", nil, tcpAddr)
+		if err != nil {
+			return nil, err
+		}
+		ownProcess := 0
+		if !strings.Contains(message,"Value") {
+			ownProcess, _ = GetOwnProcess()
+		} 
+		_, err = connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
+		if err != nil {
+			//println("Error dialing the TCP addrs")
+			return nil, err
+		}
+		connect.Close()
+	}
+	return connect, err
+}
+
 
 func GetProcesses() map[int]string {
 	return process

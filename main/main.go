@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	//"time"
+	"accountManager"
 )
 
 const (
@@ -33,7 +34,8 @@ var (
 	learnChan                   = make(chan string, 50)
 	valueChan                   = make(chan string, 50)
 	stopChan					= make(chan bool, 50)
-	debug 						= make(chan int, 50)
+	learnerToAccountManager = make(chan string, 50)
+	//debug 						= make(chan int, 50)
 	ownProcess             int  = 0
 	stopFlag				bool = false
 )
@@ -52,8 +54,10 @@ func main() {
 		keys[i] = k
 		i++
 	}
+	//Launch Account Manager
+	learnerToAccountManager = accountManager.EntryPoint()
 	//Call paxos and assign the channels
-	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(debug)
+	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(learnerToAccountManager)
 	//Launch Leader Election	
 	handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan = leaderElection.EntryPoint(keys, handlTrustChan)
 	//Launch Failure Detector
@@ -153,8 +157,8 @@ func handleClient(conn net.Conn) {
 		case "StopServer":
 			stopFlag = true
 			connector.Stopped = true
-		case "Debug":
-			debug <- 0
+		//case "Debug":
+			//debug <- 0
 		}
 	}
 
