@@ -222,7 +222,7 @@ func GetAvailableSlots() []int {
         ind = ind + 1
     }*/
 	var res []int
-	ind = 0
+	ind := 0
 	for i:=1; i<sizeMax ; i++ {
 		if GetValueLearned(i)=="" {
 			res[ind] = i

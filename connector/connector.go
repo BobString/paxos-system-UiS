@@ -66,7 +66,7 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 	return connect, err
 }
 
-func SendByAddr(message string, remAddr string) {
+func SendByAddr(message string, remAddr string) (error) {
 	var err error
 	var connect *net.TCPConn
 	err = nil
@@ -74,11 +74,11 @@ func SendByAddr(message string, remAddr string) {
 	if !Stopped {
 		tcpAddr, err := net.ResolveTCPAddr("tcp", remAddr)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		connect, err = net.DialTCP("tcp", nil, tcpAddr)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		ownProcess := 0
 		if !strings.Contains(message,"Value") {
@@ -87,10 +87,11 @@ func SendByAddr(message string, remAddr string) {
 		_, err = connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {
 			//println("Error dialing the TCP addrs")
-			return nil, err
+			return err
 		}
 		connect.Close()
 	}
+	return err
 }
 
 
