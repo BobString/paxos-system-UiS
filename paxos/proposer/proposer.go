@@ -29,10 +29,10 @@ func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
 }
 // what we do when we become the leader : prepare all the next slots
 func gotTrust(leader int) {
-   slots := slotsManager.GetAvailableSlots()
+   	slots := slotsManager.GetAvailableSlots()
     for i := range slots {
-		if !slotsManager.IsInWork(i) {
-			slotsManager.SetInWork(i,true)
+		if slotsManager.GetValueLearned(slots[i])=="" {
+			//slotsManager.SetInWork(i,true)
 			prepareSlot(slots[i])
 			time.Sleep(10*time.Millisecond)
 		}
@@ -65,8 +65,8 @@ func gotPromise(data string) {
             slotsManager.SetMaxRoundInPromises(slot, lastVotedRound)
         }
         if slotsManager.GetCptPromise(slot) > len(process)/2 {
-			waitForValue(slot)
 			slotsManager.ClearPromiseMap(slot)
+			waitForValue(slot)
             curR := strconv.Itoa(slotRN) 
             sendAll("Accept@" + curR + "@" + slotsManager.GetValueToDecide(slot) + "@" + strconv.Itoa(slot))
         }

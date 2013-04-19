@@ -35,6 +35,8 @@ var (
 	valueChan                   = make(chan string, 50)
 	stopChan					= make(chan bool, 50)
 	learnerToAccountManager = make(chan string, 50)
+	askForProcChan chan int
+	procMapChan chan string
 	//debug 						= make(chan int, 50)
 	ownProcess             int  = 0
 	stopFlag				bool = false
@@ -59,7 +61,7 @@ func main() {
 	//Call paxos and assign the channels
 	handlTrustChan, inPrepChan, handlPromiseLeaderChan, inAcceptChan, learnChan, valueChan = paxosMain.EntryPoint(learnerToAccountManager)
 	//Launch Leader Election	
-	handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan = leaderElection.EntryPoint(keys, handlTrustChan)
+	handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan,askForProcChan,procMapChan = leaderElection.EntryPoint(keys, handlTrustChan)
 	//Launch Failure Detector
 	handlHBReplyChan, handlHBRequChan = failureDetector.EntryPoint(delay, keys)
 
@@ -139,6 +141,12 @@ func handleClient(conn net.Conn) {
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			handlTrustLeaderChan <- i
+		case "ProcMap":
+		 	procMapChan <- string1
+		case "AskForProcMap":
+			i, err := strconv.Atoi(stringaux)
+			checkError(err)
+			askForProcChan <- i
 		case "Promise":
 			handlPromiseLeaderChan <- string1
 		case "Prepare":

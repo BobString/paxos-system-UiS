@@ -1,6 +1,6 @@
 package slotsManager
 import (
-    "fmt"
+    //"fmt"
 	//"strconv"
 )
 // the type of the values inside the map
@@ -36,7 +36,7 @@ func GetLastVotedVal(slot int) string {
 }
 func GetValueLearned(slot int) string {
     if slotMap[slot].ValueLearned == "" {
-        fmt.Println("Accessing an unlearned value")
+        //fmt.Println("Accessing an unlearned value")
     }
     return slotMap[slot].ValueLearned
 }
@@ -52,9 +52,9 @@ func GetMaxRoundInPromises(slot int) int {
 func GetValueFromLearnPair(p LearnPair) string {
     return p.Val
 }
-func IsInWork (slot int) bool {
+/*func IsInWork (slot int) bool {
 	return slotMap[slot].InWork
-}
+}*/
 
 
 //////////// SETTERS ////////////
@@ -98,11 +98,11 @@ func SetMaxRoundInPromises(slot, maxR int) {
     slotType.MaxRoundInPromises = maxR
 	slotMap[slot]=slotType
 }
-func SetInWork (slot int, val bool) {
+/*func SetInWork (slot int, val bool) {
 	slotType := slotMap[slot]
     slotType.InWork = val
 	slotMap[slot]=slotType
-}
+}*/
 // a local function to increase the counter of promises
 func incCptProm(slot int) {
     slotType := slotMap[slot]
@@ -161,7 +161,13 @@ func ClearLearnMap(slot int) {
 }
 // a getter for the map elements
 func GetFromLearnMap(slot int, key LearnPair) int {
-    return slotMap[slot].LearnMap[key]
+	var result int
+	if c,is := slotMap[slot].LearnMap[key] ; is {
+		result = c
+	} else {
+		result = 0
+	}
+    return result
 }
 // A classic belongsTo function
 func BelongsToLearnMap(slot int, key LearnPair) bool {
@@ -173,7 +179,7 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
 // returns the smallest slot with no learned value yet
 func getSmallestUnused() int {
     i := index 	
-    for IsInWork(i) {
+    for GetValueLearned(i)=="" {
         i = i + 1
 		if i>sizeMax {
 			break
@@ -185,7 +191,7 @@ func getSmallestUnused() int {
 func getBiggestUnused() int {
 	i := getSmallestUnused()
 	stop := i
-	for !IsInWork(i+1) {
+	for !(GetValueLearned(i+1)=="") {
         i = i + 1
 		if i == stop {
 			if i!=1 {
@@ -220,7 +226,15 @@ func GetAvailableSlots() []int {
 		}
 		res[i] = slotMin + ind
         ind = ind + 1
-    }
+    }/*
+	res := make(map[int]int)
+	ind := 0
+	for i:=1; i<=sizeMax ; i++ {
+		if GetValueLearned(i)=="" {
+			res[ind] = i
+			ind = ind +1
+		}
+	}*/
     return res
 }
 
