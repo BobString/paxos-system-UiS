@@ -29,9 +29,9 @@ func EntryPoint(p []int) (chan int, chan string, chan string, chan int) {
 }
 // what we do when we become the leader : prepare all the next slots
 func gotTrust(leader int) {
-   slots := slotsManager.GetAvailableSlots()
+   	slots := slotsManager.GetAvailableSlots()
     for i := range slots {
-		if slotsManager.GetValueLearned(i)=="" {
+		if slotsManager.GetValueLearned(slots[i])=="" {
 			//slotsManager.SetInWork(i,true)
 			prepareSlot(slots[i])
 			time.Sleep(10*time.Millisecond)
