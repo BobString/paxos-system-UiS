@@ -96,10 +96,6 @@ func SendByAddr(message string, remAddr string) (error) {
 		}
 		connect.Close()
 	}
-			return err
-		}
-		connect.Close()
-	}
 	return err
 }
 
