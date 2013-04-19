@@ -28,7 +28,7 @@ var (
 	processMap = make (map[int]int)
 )
 
-func EntryPoint(p []int, trust chan int) (chan int, chan int, chan int, chan int, chan int) {
+func EntryPoint(p []int, trust chan int) (chan int, chan int, chan int, chan int, chan string) {
 	process = p
 	ownProcess, _ = connector.GetOwnProcess()
 	handlTrustChan = trust
@@ -62,7 +62,7 @@ func initProcMap() map[int]int {
 		leader = ownProcess
 		println("Init leader : we are first")
 		//creation of map
-	case mess:=<-procMapChan
+	case mess:=<-procMapChan:
 		// decrypting message
 		aux := strings.Split(mess,"@")	
 		for i:=1;i<len(aux)-2;i++ {
@@ -154,7 +154,7 @@ func newLeaderRequest() {
 
 func gotSuspectProc(pr int) {
 	pSuspect[pr] = true
-	old = processMap[pr]
+	old := processMap[pr]
 	delete(processMap,pr)
 	for p := range processMap {
 		if processMap[pr]> old {
