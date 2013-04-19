@@ -38,6 +38,7 @@ func EntryPoint(p []int, trust chan int) (chan int, chan int, chan int, chan int
 		pSuspect[proc] = false
 	}
 	//leader = ownProcess
+	initProcMap()
 	go auxiliar()
 
 	return handlSuspectChan, handlRecoveryChan, handlTrustLeaderChan, askForProcMapChan, procMapChan
@@ -48,7 +49,7 @@ func GetLeader() int {
 	return leader
 }
 
-func initProcMap() map[int]int {
+func initProcMap() {
 	// send the AskForProcMap to everyone
 	for pr := range process {
 		preSend("AskForProcMap",process[pr])
@@ -157,10 +158,10 @@ func gotSuspectProc(pr int) {
 	old := processMap[pr]
 	delete(processMap,pr)
 	for p := range processMap {
-		if processMap[pr]> old {
-			processMap[pr] = processMap[pr] - 1
+		if processMap[p]> old {
+			processMap[p] = processMap[p] - 1
 			if processMap[pr]==0 {
-				leader = pr
+				leader = p
 			}
 		}
 	}
