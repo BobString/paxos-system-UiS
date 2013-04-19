@@ -1,6 +1,6 @@
 package slotsManager
 import (
-    "fmt"
+    //"fmt"
 	//"strconv"
 )
 // the type of the values inside the map
@@ -161,7 +161,13 @@ func ClearLearnMap(slot int) {
 }
 // a getter for the map elements
 func GetFromLearnMap(slot int, key LearnPair) int {
-    return slotMap[slot].LearnMap[key]
+	var result int
+	if c,is := slotMap[slot].LearnMap[key] ; is {
+		result = c
+	} else {
+		result = 0
+	}
+    return result
 }
 // A classic belongsTo function
 func BelongsToLearnMap(slot int, key LearnPair) bool {
@@ -261,7 +267,7 @@ func initSlot () {
 func EntryPoint() {
 	index = 1
 	slotMap = make(map[int] MapValueType,sizeMax)
-    for i := 1; i <= 3; i++ {
+    for i := 1; i <= sizeMax; i++ {
         initSlot()
     }
 	index = 3

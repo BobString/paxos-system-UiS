@@ -42,15 +42,11 @@ func learnHandler(learn string) {
     a, _ := strconv.Atoi(res[1])           // to get the int for the round number
     p := slotsManager.LearnPair{a, res[2]} // creation of the pair to store in the map
     slot, _ := strconv.Atoi(res[3])
-    ok := slotsManager.BelongsToLearnMap(slot, p)
-    // if the pair is in the map, we increase the count by 1, otherwise we put 1
-    if ok {
- 	   slotsManager.AddToLearnMap(slot, p, slotsManager.GetFromLearnMap(slot, p)+1)
-    } else {
-		 slotsManager.AddToLearnMap(slot, p, 1)
-	}
+ 	count := slotsManager.GetFromLearnMap(slot, p)
+  	slotsManager.AddToLearnMap(slot, p, count+1)
     // we then check if the a quorum of acceptors has sent the same Learn message
-    if v := slotsManager.GetFromLearnMap(slot, p); v > (nbProc / 2) {
+	v := slotsManager.GetFromLearnMap(slot, p)
+    if (v > (nbProc / 2)) && (slotsManager.GetValueLearned=="") {
         nextSlot := slotsManager.SetValueToLearn(slot, p.Val)
         slotChan <- nextSlot
         println("["+time.Now().String()+"]", "NEW VALUE LEARNED :", p.Val, "in slot", res[3])
