@@ -15,11 +15,13 @@ var (
     slotChan  chan int
     nbProc int // the number of precesses, to determine if a quorum has sent Learn
 	toAccManager chan string
+	totalC int
 )
 
 // Init function
 func EntryPoint(count int, newSlotChan chan int, toAccountManager chan string) chan string {
     nbProc = count
+	totalC = 0	
     slotChan = newSlotChan
 	toAccManager = toAccountManager
     go learnListener()
@@ -33,6 +35,7 @@ func clearMap(slot int) {
 func learnListener () {
 	for {
 		learn := <-learnChan 
+		totalC = totalC +1
 		learnHandler(learn)
 	}
 }
@@ -43,9 +46,9 @@ func learnHandler(learn string) {
     p := slotsManager.LearnPair{a, res[2]} // creation of the pair to store in the map
     slot, _ := strconv.Atoi(res[3])
  	count := slotsManager.GetFromLearnMap(slot, p)
-	println("learn count BEFORE ", strconv.Itoa(count+1)
+	println("learn count  ", strconv.Itoa(totalC))
   	slotsManager.AddToLearnMap(slot, p, count+1)
-	println("learn count AFTER (for test)", strconv.Itoa(count+1)
+	println("learn count AFTER (for test)", strconv.Itoa(count+1))
     // we then check if the a quorum of acceptors has sent the same Learn message
 	v := slotsManager.GetFromLearnMap(slot, p)
     if (v > (nbProc / 2)) /*&& (slotsManager.GetValueLearned(slot)=="") */{

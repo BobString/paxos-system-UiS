@@ -65,8 +65,8 @@ func gotPromise(data string) {
             slotsManager.SetMaxRoundInPromises(slot, lastVotedRound)
         }
         if slotsManager.GetCptPromise(slot) > len(process)/2 {
-			waitForValue(slot)
 			slotsManager.ClearPromiseMap(slot)
+			waitForValue(slot)
             curR := strconv.Itoa(slotRN) 
             sendAll("Accept@" + curR + "@" + slotsManager.GetValueToDecide(slot) + "@" + strconv.Itoa(slot))
         }
