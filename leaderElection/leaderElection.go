@@ -62,7 +62,7 @@ func initProcMap() map[int]int {
 		leader = ownProcess
 		println("Init leader : we are first")
 		//creation of map
-	case mess<-procMapChan
+	case mess:=<-procMapChan
 		// decrypting message
 		aux := strings.Split(mess,"@")	
 		for i:=1;i<len(aux)-2;i++ {
@@ -70,7 +70,7 @@ func initProcMap() map[int]int {
 			c,_ := strconv.Atoi(aux[i+1])
 			if c==0 {
 				leader = c
-				println("Init leader : "+strconv.Itoa(leader)+" is leader"
+				println("Init leader : "+strconv.Itoa(leader)+" is leader")
 			}
 			processMap[p]=c
 			i = i+1 // that way each time i is increased of 2			
@@ -107,8 +107,9 @@ func auxiliar() {
 			//} else {
 			//	countLeader = 0
 			//}
-		}
+			}
 		//println("Leader: ", leader)
+		}
 	}
 }
 
@@ -163,7 +164,7 @@ func gotSuspectProc(pr int) {
 			}
 		}
 	}
-	println(strconv.Itoa(pr)" crashed. Leader is "+strconv.Itoa(leader))
+	println(strconv.Itoa(pr)+" crashed. Leader is "+strconv.Itoa(leader))
 	/*if pr == leader {
 		leader = ownProcess
 		//println("Leader: ", leader)
