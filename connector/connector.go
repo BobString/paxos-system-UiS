@@ -15,8 +15,8 @@ var (
 		1: "152.94.0.120:1200", //pitter28
 		2: "152.94.0.117:1200", // pitter25
 		//2: "152.94.0.121:1200", //pitter29		
-		//2: "152.94.0.114:1200", //pitter22
-		3: "152.94.0.124:1200", //pitter32
+		3: "152.94.0.114:1200", //pitter22
+		//3: "152.94.0.124:1200", //pitter32
 		//3: "152.94.0.115:1200", //pitter23
 		
 	}
@@ -54,7 +54,7 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 			addr := connect.LocalAddr().String()
 			aux := strings.Split(addr,":")
 			addr = aux[0]+":1201"
-			message = message + connect.LocalAddr().String() + ","
+			message = message + addr + ","
 		}
 		_, err := connect.Write([]byte(message + "@" + strconv.Itoa(ownProcess) + "@"))
 		if err != nil {

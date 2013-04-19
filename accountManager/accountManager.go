@@ -5,6 +5,7 @@ import (
 	//"fmt"
 	"strconv"
 	"connector"
+	"leaderElection"
 )
 
 var (
@@ -115,7 +116,16 @@ func transfer(accFrom string, accTo string, amount string, client string) {
 	sendToClient(message,client)
 }
 
+// to check if we are the leader
+func isLeader() bool {
+    me, _ := connector.GetOwnProcess()
+    leader := leaderElection.GetLeader()
+    return me == leader
+}
+
 
 func sendToClient(message string, client string){
-	connector.SendByAddr(message,client)
+	if isLeader() {
+		connector.SendByAddr(message,client)
+	}
 }
