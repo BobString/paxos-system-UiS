@@ -36,7 +36,7 @@ func GetLastVotedVal(slot int) string {
 }
 func GetValueLearned(slot int) string {
     if slotMap[slot].ValueLearned == "" {
-        fmt.Println("Accessing an unlearned value")
+        //fmt.Println("Accessing an unlearned value")
     }
     return slotMap[slot].ValueLearned
 }
@@ -202,7 +202,7 @@ func getBiggestUnused() int {
 	return i
 }*/
 // returns the available slots (with no learned value) as a slice of int
-func GetAvailableSlots() []int {
+func GetAvailableSlots() map[int	]int {
 	// verified
    /* slotMin := getSmallestUnused()
     slotMax := getBiggestUnused()
@@ -261,7 +261,7 @@ func initSlot () {
 func EntryPoint() {
 	index = 1
 	slotMap = make(map[int] MapValueType,sizeMax)
-    for i := 1; i <= sizeMax; i++ {
+    for i := 1; i <= 3; i++ {
         initSlot()
     }
 	index = 3
