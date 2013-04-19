@@ -52,9 +52,9 @@ func GetMaxRoundInPromises(slot int) int {
 func GetValueFromLearnPair(p LearnPair) string {
     return p.Val
 }
-func IsInWork (slot int) bool {
+/*func IsInWork (slot int) bool {
 	return slotMap[slot].InWork
-}
+}*/
 
 
 //////////// SETTERS ////////////
@@ -98,11 +98,11 @@ func SetMaxRoundInPromises(slot, maxR int) {
     slotType.MaxRoundInPromises = maxR
 	slotMap[slot]=slotType
 }
-func SetInWork (slot int, val bool) {
+/*func SetInWork (slot int, val bool) {
 	slotType := slotMap[slot]
     slotType.InWork = val
 	slotMap[slot]=slotType
-}
+}*/
 // a local function to increase the counter of promises
 func incCptProm(slot int) {
     slotType := slotMap[slot]
@@ -169,7 +169,7 @@ func BelongsToLearnMap(slot int, key LearnPair) bool {
     return ok
 }
 
-
+/*
 // returns the smallest slot with no learned value yet
 func getSmallestUnused() int {
     i := index 	
@@ -200,11 +200,11 @@ func getBiggestUnused() int {
 		}
     }
 	return i
-}
+}*/
 // returns the available slots (with no learned value) as a slice of int
 func GetAvailableSlots() []int {
 	// verified
-    slotMin := getSmallestUnused()
+   /* slotMin := getSmallestUnused()
     slotMax := getBiggestUnused()
 	length := 0
 	if slotMax < slotMin {
@@ -220,7 +220,15 @@ func GetAvailableSlots() []int {
 		}
 		res[i] = slotMin + ind
         ind = ind + 1
-    }
+    }*/
+	var res []int
+	ind = 0
+	for i:=1; i<sizeMax ; i++ {
+		if GetValueLearned(i)=="" {
+			res[ind] = i
+			ind = ind +1
+		}
+	}
     return res
 }
 

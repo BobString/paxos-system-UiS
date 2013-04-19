@@ -66,7 +66,7 @@ func Send(message string, pr int) (*net.TCPConn, error) {
 	return connect, err
 }
 
-func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
+func SendByAddr(message string, remAddr string) {
 	var err error
 	var connect *net.TCPConn
 	err = nil
@@ -91,7 +91,6 @@ func SendByAddr(message string, remAddr string) (*net.TCPConn, error) {
 		}
 		connect.Close()
 	}
-	return connect, err
 }
 
 
