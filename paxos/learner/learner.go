@@ -44,9 +44,10 @@ func learnHandler(learn string) {
     slot, _ := strconv.Atoi(res[3])
  	count := slotsManager.GetFromLearnMap(slot, p)
   	slotsManager.AddToLearnMap(slot, p, count+1)
+	println("learn count", strconv.Itoa(count+1)
     // we then check if the a quorum of acceptors has sent the same Learn message
 	v := slotsManager.GetFromLearnMap(slot, p)
-    if (v > (nbProc / 2)) && (slotsManager.GetValueLearned=="") {
+    if (v > (nbProc / 2)) /*&& (slotsManager.GetValueLearned(slot)=="") */{
         nextSlot := slotsManager.SetValueToLearn(slot, p.Val)
         slotChan <- nextSlot
         println("["+time.Now().String()+"]", "NEW VALUE LEARNED :", p.Val, "in slot", res[3])
