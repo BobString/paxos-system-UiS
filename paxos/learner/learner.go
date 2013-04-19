@@ -43,8 +43,9 @@ func learnHandler(learn string) {
     p := slotsManager.LearnPair{a, res[2]} // creation of the pair to store in the map
     slot, _ := strconv.Atoi(res[3])
  	count := slotsManager.GetFromLearnMap(slot, p)
+	println("learn count BEFORE ", strconv.Itoa(count+1)
   	slotsManager.AddToLearnMap(slot, p, count+1)
-	println("learn count", strconv.Itoa(count+1)
+	println("learn count AFTER (for test)", strconv.Itoa(count+1)
     // we then check if the a quorum of acceptors has sent the same Learn message
 	v := slotsManager.GetFromLearnMap(slot, p)
     if (v > (nbProc / 2)) /*&& (slotsManager.GetValueLearned(slot)=="") */{
