@@ -57,12 +57,7 @@ func initProcMap() {
 	// if within an amount of time we did not receive a ProcMap message, then we consider ourself as the leader, and create the map
 	//start timer
 	timer := time.NewTicker(500 * time.Millisecond)
-	select {
-	case <-timer.C:	
-		processMap[ownProcess] = 0
-		leader = ownProcess
-		println("Init leader : we are first")
-		//creation of map
+	select {	
 	case mess:=<-procMapChan:
 		// decrypting message
 		timer.Stop()
@@ -78,6 +73,11 @@ func initProcMap() {
 			i = i+1 // that way each time i is increased of 2			
 		}
 		processMap[ownProcess] = i/2
+	case <-timer.C:	
+		processMap[ownProcess] = 0
+		leader = ownProcess
+		println("Init leader : we are first")
+		//creation of map
 	}	
 }
 
@@ -161,9 +161,9 @@ func gotSuspectProc(pr int) {
 	old := processMap[pr]
 	delete(processMap,pr)
 	for p := range processMap {
-		if processMap[p]> old {
+		if processMap[p] > old {
 			processMap[p] = processMap[p] - 1
-			if processMap[pr]==0 {
+			if processMap[p]==0 {
 				leader = p
 			}
 		}
