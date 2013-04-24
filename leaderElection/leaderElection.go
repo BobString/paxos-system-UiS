@@ -56,7 +56,7 @@ func initProcMap() {
 	}
 	// if within an amount of time we did not receive a ProcMap message, then we consider ourself as the leader, and create the map
 	//start timer
-	timer := time.NewTicker(time.Duration(100) * time.Millisecond)
+	timer := time.NewTicker(time.Duration(500) * time.Millisecond)
 	select {
 	case <-timer.C:	
 		processMap[ownProcess] = 0
