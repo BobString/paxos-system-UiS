@@ -171,16 +171,16 @@ func gotSuspectProc(pr int) {
 	delete(processMap,pr)
 	if was {
 		maxVal = maxVal - 1
-	}
-	for p := range processMap {
-		if processMap[p] > old {
-			processMap[p] = processMap[p] - 1
-			if processMap[p]==1 {
-				leader = p
+		for p := range processMap {
+			if processMap[p] > old {
+				processMap[p] = processMap[p] - 1
+				if processMap[p]==1 {
+					leader = p
+				}
 			}
 		}
-	}
-	println(strconv.Itoa(pr)+" crashed. Leader is "+strconv.Itoa(leader))
+		println(strconv.Itoa(pr)+" crashed. Leader is "+strconv.Itoa(leader))
+	}	
 	/*if pr == leader {
 		leader = ownProcess
 		//println("Leader: ", leader)
