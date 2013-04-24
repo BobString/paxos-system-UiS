@@ -142,8 +142,10 @@ func handleClient(conn net.Conn) {
 			checkError(err)
 			handlTrustLeaderChan <- i
 		case "ProcMap":
+		println("Receiving a MAP !!!!")
 		 	procMapChan <- string1
 		case "AskForProcMap":
+		println("Receiving a ProcMap Ask !")
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			askForProcChan <- i
