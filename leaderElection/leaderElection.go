@@ -65,6 +65,7 @@ func initProcMap() {
 		//creation of map
 	case mess:=<-procMapChan:
 		// decrypting message
+		timer.Stop()
 		aux := strings.Split(mess,"@")	
 		for i:=1;i<len(aux)-2;i++ {
 			p,_ := strconv.Atoi(aux[i])
@@ -76,6 +77,7 @@ func initProcMap() {
 			processMap[p]=c
 			i = i+1 // that way each time i is increased of 2			
 		}
+		processMap[ownProcess] = i/2
 	}	
 }
 
