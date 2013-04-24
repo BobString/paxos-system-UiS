@@ -26,6 +26,7 @@ var (
 	acks                 int = 0
 	timeLeaderRequest    int = 1
 	processMap = make (map[int]int)
+	maxVal 				int = 0
 )
 
 func EntryPoint(p []int, trust chan int) (chan int, chan int, chan int, chan int, chan string) {
@@ -62,7 +63,8 @@ func initProcMap() {
 		// decrypting message
 		timer.Stop()
 		aux := strings.Split(mess,"@")	
-		for i:=1;i<len(aux)-2;i++ {
+		i:=1
+		for i=1;i<len(aux)-2;i++ {
 			p,_ := strconv.Atoi(aux[i])
 			c,_ := strconv.Atoi(aux[i+1])
 			if c==0 {
@@ -70,9 +72,13 @@ func initProcMap() {
 				println("Init leader : "+strconv.Itoa(leader)+" is leader")
 			}
 			processMap[p]=c
-			i = i+1 // that way each time i is increased of 2			
+			if c>maxVal {
+				maxVal = c
+			}
+			i = i+1 // that way each time i is increased of 2		
 		}
-		processMap[ownProcess] = i/2
+		maxVal = maxVal + 1
+		processMap[ownProcess] =  maxVal
 	case <-timer.C:	
 		processMap[ownProcess] = 0
 		leader = ownProcess
@@ -111,7 +117,7 @@ func auxiliar() {
 			//	countLeader = 0
 			//}
 			}
-		//println("Leader: ", leader)
+			println("Leader: ", leader)
 		}
 	}
 }
@@ -123,6 +129,8 @@ func encryptMap (pr int) {
 	}
 	println("Map sent : "+mess)
 	preSend(mess,pr)
+	maxVal = maxVal + 1
+	processMap[pr] = maxVal
 }
 
 func trustLeader(pr int) {
@@ -160,6 +168,7 @@ func gotSuspectProc(pr int) {
 	pSuspect[pr] = true
 	old := processMap[pr]
 	delete(processMap,pr)
+	maxVal = maxVal - 1
 	for p := range processMap {
 		if processMap[p] > old {
 			processMap[p] = processMap[p] - 1
@@ -177,13 +186,8 @@ func gotSuspectProc(pr int) {
 }
 func gotProcRecov(pr int) {
 	pSuspect[pr] = false
-	max := 0
-	for p := range processMap{
-		if processMap[p] > max{
-			max = processMap[p]
-		}
-	}
-	processMap[pr] = max + 1	
+	maxVal = maxVal + 1
+	processMap[pr] = maxVal
 }
 
 func preSend(message string, pr int) {
