@@ -59,7 +59,7 @@ func initProcMap() {
 	//start timer
 	t := time.NewTicker(500 * time.Millisecond)
 	select {	
-	case mess:=<-procMapChan:
+	case mess := <-procMapChan:
 		// decrypting message
 		println("Decrypting map !!!")
 		t.Stop()

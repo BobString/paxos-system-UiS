@@ -148,7 +148,7 @@ func handleClient(conn net.Conn) {
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
 			if i!=ownProcess {
-				println("Receiving a ProcMap Ask !")
+				println("Receiving a ProcMap Ask ! "+string1)
 				askForProcChan <- i
 			}
 		case "Promise":
