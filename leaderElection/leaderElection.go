@@ -56,7 +56,7 @@ func initProcMap() {
 	}
 	// if within an amount of time we did not receive a ProcMap message, then we consider ourself as the leader, and create the map
 	//start timer
-	timer := time.NewTicker(time.Duration(500) * time.Millisecond)
+	timer := time.NewTicker(500 * time.Millisecond)
 	select {
 	case <-timer.C:	
 		processMap[ownProcess] = 0
@@ -119,6 +119,7 @@ func encryptMap (pr int) {
 	for p := range processMap {
 		mess = mess + "@" + strconv.Itoa(p) + "@" + strconv.Itoa(processMap[p])
 	}
+	println("Map sent : "+mess)
 	preSend(mess,pr)
 }
 
