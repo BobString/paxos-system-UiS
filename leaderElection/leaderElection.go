@@ -26,7 +26,7 @@ var (
 	acks                 int = 0
 	timeLeaderRequest    int = 1
 	processMap = make (map[int]int)
-	maxVal 				int = 0
+	maxVal 				int = 1
 )
 
 func EntryPoint(p []int, trust chan int) (chan int, chan int, chan int, chan int, chan string) {
@@ -68,7 +68,7 @@ func initProcMap() {
 		for i=1;i<len(aux)-2;i++ {
 			p,_ := strconv.Atoi(aux[i])
 			c,_ := strconv.Atoi(aux[i+1])
-			if c==0 {
+			if c==1 {
 				leader = c
 				println("Init leader : "+strconv.Itoa(leader)+" is leader")
 			}
@@ -81,7 +81,7 @@ func initProcMap() {
 		maxVal = maxVal + 1
 		processMap[ownProcess] =  maxVal
 	case <-t.C:	
-		processMap[ownProcess] = 0
+		processMap[ownProcess] = 1
 		leader = ownProcess
 		println("Init leader : we are first")
 		//creation of map
@@ -175,7 +175,7 @@ func gotSuspectProc(pr int) {
 	for p := range processMap {
 		if processMap[p] > old {
 			processMap[p] = processMap[p] - 1
-			if processMap[p]==0 {
+			if processMap[p]==1 {
 				leader = p
 			}
 		}

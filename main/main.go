@@ -144,11 +144,13 @@ func handleClient(conn net.Conn) {
 		case "ProcMap":
 		println("Receiving a MAP !!!!")
 		 	procMapChan <- string1
-		case "AskForProcMap":
-		println("Receiving a ProcMap Ask !")
+		case "AskForProcMap":		
 			i, err := strconv.Atoi(stringaux)
 			checkError(err)
-			askForProcChan <- i
+			if i!=ownProcess {
+				println("Receiving a ProcMap Ask !")
+				askForProcChan <- i
+			}
 		case "Promise":
 			handlPromiseLeaderChan <- string1
 		case "Prepare":
